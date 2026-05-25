@@ -298,7 +298,7 @@
         transform: translateX(120%);
         transition: transform 0.3s ease;
         right: 12px;
-        width: 260px;
+        width: var(--palette-width);
       }
 
       body.palette-open #palette {
@@ -388,18 +388,20 @@
 
   <script>
     const questions = [];
+    const DIFFICULTY_LEVELS = ['Easy', 'Moderate', 'Advanced'];
+    const EXPECTED_OPTION_COUNT = 4;
+    const QUESTION_VISIBILITY_THRESHOLD = 0.35; // Mark visited when ~35% of a card is visible.
+
     const add = (question, options, answer, explanation, difficulty, type) => {
       const index = questions.length + 1;
-      if (!Array.isArray(options) || options.length !== 4) {
-        console.warn(`Q${index}: Expected exactly 4 options.`, question);
+      if (!Array.isArray(options) || options.length !== EXPECTED_OPTION_COUNT) {
+        console.warn(`Q${index}: Expected exactly ${EXPECTED_OPTION_COUNT} options.`, question);
       }
-      if (typeof answer !== 'number' || answer < 0 || answer >= options.length) {
+      if (Array.isArray(options) && (typeof answer !== 'number' || answer < 0 || answer >= options.length)) {
         console.warn(`Q${index}: Answer index is out of range.`, question);
       }
       questions.push({ question, options, answer, explanation, difficulty, type });
     };
-
-    const QUESTION_VISIBILITY_THRESHOLD = 0.35;
 
     // 1-20: Evolution, administration, symbols
     add(`In 1950, the United Provinces was renamed as:`, [`Uttar Pradesh`, `Madhya Pradesh`, `Uttaranchal`, `Bihar`], 0, `The state was officially renamed Uttar Pradesh in 1950.`, `Easy`, `MCQ`);
@@ -646,7 +648,7 @@
 
     totalCount.textContent = questions.length;
 
-    const difficultyCounts = { Easy: 0, Moderate: 0, Advanced: 0 };
+    const difficultyCounts = Object.fromEntries(DIFFICULTY_LEVELS.map((level) => [level, 0]));
 
     const state = {
       visited: new Set(),
@@ -769,11 +771,8 @@
     const fragment = document.createDocumentFragment();
     const paletteFragment = document.createDocumentFragment();
 
-    questions.forEach((q) => {
-      difficultyCounts[q.difficulty] = (difficultyCounts[q.difficulty] || 0) + 1;
-    });
-
     questions.forEach((q, idx) => {
+      difficultyCounts[q.difficulty] = (difficultyCounts[q.difficulty] || 0) + 1;
       const card = makeQuestionCard(q, idx);
       fragment.appendChild(card);
       observer.observe(card);

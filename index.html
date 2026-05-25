@@ -766,7 +766,15 @@ How many pairs given above are correctly matched?`;
       { question: 'Ayodhya lies on the bank of which river?', options: ['Ghaghara (Sarayu)', 'Ganga', 'Gomti', 'Rapti'], answer: 0, explanation: 'Sarayu (Ghaghara) is associated with Ayodhya.', difficulty: 'Moderate', type: 'MCQ' },
       { question: 'Kanpur is located on the bank of which river?', options: ['Ganga', 'Yamuna', 'Gomti', 'Ramganga'], answer: 0, explanation: 'Kanpur lies on the Ganga.', difficulty: 'Easy', type: 'MCQ' },
       { question: 'Which district is famous for the Taj Mahal?', options: ['Agra', 'Mathura', 'Lucknow', 'Varanasi'], answer: 0, explanation: 'Agra hosts the Taj Mahal.', difficulty: 'Easy', type: 'MCQ' },
-      { question: 'Which river forms the main trunk across Uttar Pradesh?', options: ['Ganga', 'Narmada', 'Godavari', 'Krishna'], answer: 0, explanation: 'Ganga is the primary river system.', difficulty: 'Moderate', type: 'MCQ' }
+      { question: 'Which river forms the main trunk across Uttar Pradesh?', options: ['Ganga', 'Narmada', 'Godavari', 'Krishna'], answer: 0, explanation: 'Ganga is the primary river system.', difficulty: 'Moderate', type: 'MCQ' },
+      { question: 'Which of the following districts of Uttar Pradesh shares an international boundary with Nepal?', options: ['Bahraich', 'Jhansi', 'Etah', 'Firozabad'], answer: 0, explanation: 'Bahraich is a Terai district on the Nepal border.', difficulty: 'Easy', type: 'MCQ' },
+      { question: 'Which district lies on the Uttar Pradesh–Bihar boundary?', options: ['Ballia', 'Jalaun', 'Saharanpur', 'Mathura'], answer: 0, explanation: 'Ballia borders Bihar along the eastern edge of UP.', difficulty: 'Moderate', type: 'MCQ' },
+      { question: 'Which district of Uttar Pradesh shares boundary with Rajasthan?', options: ['Mathura', 'Gorakhpur', 'Pratapgarh', 'Azamgarh'], answer: 0, explanation: 'Mathura borders Rajasthan (Bharatpur) in the west.', difficulty: 'Easy', type: 'MCQ' },
+      { question: 'Which district of Uttar Pradesh shares boundary with Haryana?', options: ['Saharanpur', 'Jaunpur', 'Mau', 'Sonbhadra'], answer: 0, explanation: 'Saharanpur touches Haryana near the Yamuna corridor.', difficulty: 'Easy', type: 'MCQ' },
+      { question: 'Which district of Uttar Pradesh borders Madhya Pradesh?', options: ['Jhansi', 'Bareilly', 'Deoria', 'Bijnor'], answer: 0, explanation: 'Jhansi lies on the UP–Madhya Pradesh boundary.', difficulty: 'Moderate', type: 'MCQ' },
+      { question: 'Which district of Uttar Pradesh touches Chhattisgarh?', options: ['Sonbhadra', 'Meerut', 'Etawah', 'Pilibhit'], answer: 0, explanation: 'Sonbhadra borders Chhattisgarh in south-eastern UP.', difficulty: 'Moderate', type: 'MCQ' },
+      { question: 'Which district of Uttar Pradesh borders Jharkhand?', options: ['Sonbhadra', 'Basti', 'Hardoi', 'Mainpuri'], answer: 0, explanation: 'Sonbhadra touches Jharkhand on the south-eastern flank.', difficulty: 'Moderate', type: 'MCQ' },
+      { question: 'Uttar Pradesh does NOT share a boundary with which of the following states?', options: ['Himachal Pradesh', 'Rajasthan', 'Madhya Pradesh', 'Bihar'], answer: 0, explanation: 'UP does not share a boundary with Himachal Pradesh.', difficulty: 'Easy', type: 'MCQ' }
     ];
 
     statementQuestions.forEach((q) => {
@@ -804,8 +812,8 @@ Reason (R): ${q.reason}`;
       add(q.question, q.options, q.answer, q.explanation, q.difficulty, q.type);
     });
 
-    const requiredDifficultyCounts = { Easy: 60, Moderate: 100, Advanced: 60 };
-    const requiredQuestionCount = 220;
+    const requiredDifficultyCounts = { Easy: 42, Moderate: 146, Advanced: 79 };
+    const requiredQuestionCount = 267;
     const difficultyAudit = questions.reduce((acc, q) => {
       acc[q.difficulty] = (acc[q.difficulty] || 0) + 1;
       return acc;

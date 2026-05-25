@@ -388,8 +388,16 @@
   <script>
     const questions = [];
     const add = (question, options, answer, explanation, difficulty, type) => {
+      if (!Array.isArray(options) || options.length !== 4) {
+        console.warn('Each question should have exactly 4 options.', question);
+      }
+      if (typeof answer !== 'number' || answer < 0 || answer >= options.length) {
+        console.warn('Answer index is out of range for question:', question);
+      }
       questions.push({ question, options, answer, explanation, difficulty, type });
     };
+
+    const INTERSECTION_THRESHOLD = 0.35;
 
     // 1-20: Evolution, administration, symbols
     add(`In 1950, the United Provinces was renamed as:`, [`Uttar Pradesh`, `Madhya Pradesh`, `Uttaranchal`, `Bihar`], 0, `The state was officially renamed Uttar Pradesh in 1950.`, `Easy`, `MCQ`);
@@ -755,7 +763,7 @@
           }
         });
       },
-      { threshold: 0.35 }
+      { threshold: INTERSECTION_THRESHOLD }
     );
 
     const fragment = document.createDocumentFragment();

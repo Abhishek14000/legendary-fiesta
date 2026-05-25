@@ -1,0 +1,787 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Uttar Pradesh Geography MCQ Platform</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --correct: #16a34a;
+      --incorrect: #dc2626;
+      --visited: #f59e0b;
+      --unattempted: #9ca3af;
+      --shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      padding-right: 280px;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: #0f172a;
+      color: #fff;
+      padding: 16px 24px;
+      box-shadow: var(--shadow);
+    }
+
+    header h1 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 13px;
+      color: #dbeafe;
+    }
+
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px 24px 60px;
+    }
+
+    #question-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .question-card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+      scroll-margin-top: 90px;
+      transition: box-shadow 0.2s ease, transform 0.2s ease;
+    }
+
+    .question-card.highlight {
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3), var(--shadow);
+      transform: translateY(-2px);
+    }
+
+    .question-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .q-number {
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .badge {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .badge.difficulty {
+      background: #e0f2fe;
+      color: #0369a1;
+    }
+
+    .badge.type {
+      background: #ede9fe;
+      color: #6d28d9;
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      display: grid;
+      gap: 8px;
+    }
+
+    .option-btn {
+      text-align: left;
+      border: 1px solid #e5e7eb;
+      background: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease, border 0.2s ease;
+      font-size: 14px;
+    }
+
+    .option-btn:hover {
+      border-color: #94a3b8;
+      background: #f1f5f9;
+    }
+
+    .option-btn.correct {
+      background: rgba(22, 163, 74, 0.12);
+      border-color: var(--correct);
+      color: #14532d;
+    }
+
+    .option-btn.incorrect {
+      background: rgba(220, 38, 38, 0.12);
+      border-color: var(--incorrect);
+      color: #7f1d1d;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      font-weight: 600;
+      display: none;
+    }
+
+    .feedback.correct {
+      color: var(--correct);
+    }
+
+    .feedback.incorrect {
+      color: var(--incorrect);
+    }
+
+    .explanation {
+      margin-top: 8px;
+      border-radius: 8px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5f5;
+      padding: 8px 10px;
+      display: none;
+    }
+
+    .explanation summary {
+      cursor: pointer;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .explanation p {
+      margin: 8px 0 0;
+      color: #475569;
+      font-size: 13px;
+    }
+
+    #palette {
+      position: fixed;
+      right: 20px;
+      top: 88px;
+      width: 240px;
+      height: calc(100vh - 110px);
+      background: var(--card);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      padding: 12px;
+      z-index: 40;
+    }
+
+    .palette-header {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .palette-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .palette-btn {
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      font-size: 11px;
+      padding: 6px 0;
+      cursor: pointer;
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .palette-btn.visited {
+      background: rgba(245, 158, 11, 0.2);
+      border-color: var(--visited);
+    }
+
+    .palette-btn.correct {
+      background: rgba(22, 163, 74, 0.2);
+      border-color: var(--correct);
+      color: #14532d;
+    }
+
+    .palette-btn.incorrect {
+      background: rgba(220, 38, 38, 0.2);
+      border-color: var(--incorrect);
+      color: #7f1d1d;
+    }
+
+    .palette-toggle {
+      display: none;
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: var(--shadow);
+      z-index: 60;
+    }
+
+    .revision {
+      margin-top: 24px;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid #e5e7eb;
+    }
+
+    .revision h2 {
+      margin-top: 0;
+    }
+
+    .revision table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin-bottom: 16px;
+    }
+
+    .revision th, .revision td {
+      border: 1px solid #e5e7eb;
+      padding: 6px 8px;
+      text-align: left;
+    }
+
+    .revision th {
+      background: #f1f5f9;
+    }
+
+    @media (max-width: 980px) {
+      body {
+        padding-right: 0;
+      }
+
+      #palette {
+        transform: translateX(120%);
+        transition: transform 0.3s ease;
+        right: 12px;
+        width: 260px;
+      }
+
+      body.palette-open #palette {
+        transform: translateX(0);
+      }
+
+      .palette-toggle {
+        display: inline-flex;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Uttar Pradesh Geography: UPSC / UGC-NET / KVS PGT MCQ Platform</h1>
+    <p>Total Questions: <span id="total-count">0</span> | Attempt in any order • Instant feedback • UPSC-style palette</p>
+  </header>
+
+  <div class="layout">
+    <main id="main">
+      <section id="question-list"></section>
+
+      <section class="revision" id="revision">
+        <h2>Rapid Revision Tables</h2>
+        <h3>Important Rivers (UP)</h3>
+        <table>
+          <thead>
+            <tr><th>River</th><th>Key Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Ganga</td><td>Main trunk across UP; meets Yamuna at Prayagraj.</td></tr>
+            <tr><td>Yamuna</td><td>Western boundary river; meets Ganga at Triveni Sangam.</td></tr>
+            <tr><td>Gomti</td><td>Tributary of Ganga; flows through Lucknow.</td></tr>
+            <tr><td>Ghaghara (Sarayu)</td><td>Major Himalayan tributary of Ganga; Rapti & Sharda join it.</td></tr>
+            <tr><td>Betwa</td><td>Yamuna tributary in Bundelkhand.</td></tr>
+            <tr><td>Ken</td><td>Yamuna tributary draining Bundelkhand.</td></tr>
+            <tr><td>Son</td><td>Ganga tributary; receives Rihand.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Key Dams, Barrages & Canals</h3>
+        <table>
+          <thead>
+            <tr><th>Project</th><th>River / Note</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Rihand Dam</td><td>On Rihand River, Sonbhadra; creates Govind Ballabh Pant Sagar.</td></tr>
+            <tr><td>Matatila Dam</td><td>On Betwa River, Lalitpur.</td></tr>
+            <tr><td>Parichha Dam</td><td>On Betwa River, Jhansi.</td></tr>
+            <tr><td>Sharda Barrage</td><td>On Sharda River; source of Sharda Canal system.</td></tr>
+            <tr><td>Narora Barrage</td><td>On Ganga; source of Lower Ganga Canal.</td></tr>
+            <tr><td>Upper Ganga Canal</td><td>Originates at Haridwar (Bhimgoda Barrage).</td></tr>
+            <tr><td>Agra Canal</td><td>Offtakes from Okhla Barrage on Yamuna.</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Agro-Climatic Zones (Common 9-Zone Classification)</h3>
+        <table>
+          <thead>
+            <tr><th>Zone</th><th>Broad Location</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tarai & Bhabar</td><td>Northern foothills</td></tr>
+            <tr><td>Western Plain</td><td>Western UP plains</td></tr>
+            <tr><td>Mid Western Plain</td><td>Central-west plains</td></tr>
+            <tr><td>South Western Semi-Arid</td><td>Agra–Etawah belt</td></tr>
+            <tr><td>Central Plain</td><td>Awadh region</td></tr>
+            <tr><td>Bundelkhand</td><td>Southern plateau</td></tr>
+            <tr><td>North Eastern Plain</td><td>Gorakhpur–Deoria belt</td></tr>
+            <tr><td>Eastern Plain</td><td>Varanasi–Azamgarh belt</td></tr>
+            <tr><td>Vindhyan</td><td>South-eastern UP</td></tr>
+          </tbody>
+        </table>
+
+        <h3>Difficulty Classification</h3>
+        <p><strong>Easy:</strong> <span id="easy-count">0</span> | <strong>Moderate:</strong> <span id="moderate-count">0</span> | <strong>Advanced:</strong> <span id="advanced-count">0</span></p>
+      </section>
+    </main>
+
+    <aside id="palette">
+      <div class="palette-header">Question Palette</div>
+      <div class="palette-grid" id="palette-grid"></div>
+    </aside>
+  </div>
+
+  <button class="palette-toggle" id="palette-toggle">Questions</button>
+
+  <script>
+    const questions = [];
+    const add = (question, options, answer, explanation, difficulty, type) => {
+      questions.push({ question, options, answer, explanation, difficulty, type });
+    };
+
+    // 1-20: Evolution, administration, symbols
+    add(`In 1950, the United Provinces was renamed as:`, [`Uttar Pradesh`, `Madhya Pradesh`, `Uttaranchal`, `Bihar`], 0, `The state was officially renamed Uttar Pradesh in 1950.`, `Easy`, `MCQ`);
+    add(`The name “United Provinces of Agra and Oudh” was adopted in:`, [`1902`, `1858`, `1935`, `1956`], 0, `The 1902 reorganization created the United Provinces of Agra and Oudh.`, `Moderate`, `MCQ`);
+    add(`Arrange in correct chronological order: (a) North-Western Provinces (b) United Provinces of Agra and Oudh (c) United Provinces (d) Uttar Pradesh.`, [`a-b-c-d`, `b-a-c-d`, `a-c-b-d`, `b-c-a-d`], 0, `The sequence moved from North-Western Provinces to United Provinces of Agra and Oudh, then United Provinces, and finally Uttar Pradesh.`, `Advanced`, `Chronology`);
+    add(`Uttarakhand was carved out of Uttar Pradesh in:`, [`1956`, `1966`, `2000`, `2014`], 2, `Uttarakhand became a separate state in 2000.`, `Easy`, `MCQ`);
+    add(`Administrative capital of Uttar Pradesh is:`, [`Lucknow`, `Prayagraj`, `Varanasi`, `Agra`], 0, `Lucknow is the administrative capital.`, `Easy`, `MCQ`);
+    add(`The seat of the Allahabad High Court is located at:`, [`Prayagraj`, `Lucknow`, `Kanpur`, `Meerut`], 0, `The High Court is headquartered at Prayagraj (Allahabad).`, `Easy`, `MCQ`);
+    add(`Official language of Uttar Pradesh is:`, [`Hindi`, `Urdu`, `English`, `Sanskrit`], 0, `Hindi is the official language of UP.`, `Easy`, `MCQ`);
+    add(`Additional official language of Uttar Pradesh is:`, [`Urdu`, `Punjabi`, `Bengali`, `Marathi`], 0, `Urdu is the additional official language in UP.`, `Moderate`, `MCQ`);
+    add(`State animal of Uttar Pradesh is:`, [`Swamp deer (Barasingha)`, `Bengal tiger`, `Asiatic lion`, `Blackbuck`], 0, `Barasingha is the state animal.`, `Easy`, `MCQ`);
+    add(`State bird of Uttar Pradesh is:`, [`Sarus crane`, `Indian peafowl`, `Great hornbill`, `Rose-ringed parakeet`], 0, `Sarus crane is the state bird.`, `Easy`, `MCQ`);
+    add(`State flower of Uttar Pradesh is:`, [`Palash (Butea monosperma)`, `Lotus`, `Marigold`, `Rose`], 0, `Palash is the state flower.`, `Easy`, `MCQ`);
+    add(`State tree of Uttar Pradesh is:`, [`Ashoka`, `Banyan`, `Neem`, `Sal`], 0, `Ashoka tree is the state tree.`, `Easy`, `MCQ`);
+    add(`State fruit of Uttar Pradesh is:`, [`Mango`, `Guava`, `Banana`, `Litchi`], 0, `Mango is the state fruit.`, `Easy`, `MCQ`);
+    add(`The emblem of Uttar Pradesh features:`, [`Two fish and a bow-arrow`, `Lion capital`, `Lotus and elephant`, `Wheel and wheat`], 0, `The UP emblem has two fish and a bow-arrow.`, `Moderate`, `MCQ`);
+    add(`Uttar Pradesh shares an international boundary with:`, [`Nepal`, `Bhutan`, `Bangladesh`, `Myanmar`], 0, `UP borders Nepal along its northern edge.`, `Easy`, `MCQ`);
+    add(`Current number of districts in Uttar Pradesh is:`, [`75`, `70`, `73`, `80`], 0, `UP has 75 districts (permanent administrative count).`, `Easy`, `MCQ`);
+    add(`Number of administrative divisions in Uttar Pradesh is:`, [`18`, `16`, `20`, `22`], 0, `UP is divided into 18 divisions.`, `Easy`, `MCQ`);
+    add(`Uttar Pradesh has which type of legislature?`, [`Bicameral (Assembly + Council)`, `Unicameral`, `Presidential`, `Federal`], 0, `UP has a Legislative Assembly and a Legislative Council.`, `Moderate`, `MCQ`);
+    add(`Which of the following is an administrative division of Uttar Pradesh?`, [`Gorakhpur`, `Udaipur`, `Gwalior`, `Surat`], 0, `Gorakhpur is an administrative division in UP.`, `Easy`, `MCQ`);
+    add(`Which of the following pairs is correctly matched?`, [`State bird – Sarus crane`, `State animal – Elephant`, `State tree – Sal`, `State flower – Lotus`], 0, `Sarus crane is the state bird of UP.`, `Easy`, `MCQ`);
+
+    // 21-45: Boundaries, divisions, districts, regional geography
+    add(`Which of the following states does NOT share a border with Uttar Pradesh?`, [`Gujarat`, `Rajasthan`, `Bihar`, `Chhattisgarh`], 0, `UP does not border Gujarat.`, `Easy`, `MCQ`);
+    add(`Uttar Pradesh shares a border with which Union Territory?`, [`Delhi`, `Chandigarh`, `Puducherry`, `Ladakh`], 0, `Delhi shares a border with western UP.`, `Easy`, `MCQ`);
+    add(`Which district is part of the Bundelkhand region?`, [`Jhansi`, `Meerut`, `Sitapur`, `Varanasi`], 0, `Jhansi is a Bundelkhand district.`, `Easy`, `MCQ`);
+    add(`Which of the following is NOT a Bundelkhand district?`, [`Ghazipur`, `Mahoba`, `Lalitpur`, `Jalaun`], 0, `Ghazipur is in eastern UP, not Bundelkhand.`, `Moderate`, `MCQ`);
+    add(`Which district lies in the Terai belt of Uttar Pradesh?`, [`Lakhimpur Kheri`, `Agra`, `Mirzapur`, `Etawah`], 0, `The Terai belt includes Lakhimpur Kheri.`, `Moderate`, `MCQ`);
+    add(`Which district is in the Vindhyan region of UP?`, [`Sonbhadra`, `Bijnor`, `Hardoi`, `Saharanpur`], 0, `Sonbhadra is part of the Vindhyan region.`, `Moderate`, `MCQ`);
+    add(`Rohilkhand region includes which district?`, [`Bareilly`, `Jhansi`, `Prayagraj`, `Azamgarh`], 0, `Bareilly is a core district of Rohilkhand.`, `Moderate`, `MCQ`);
+    add(`Purvanchal (Eastern UP) is best represented by:`, [`Varanasi`, `Agra`, `Meerut`, `Aligarh`], 0, `Varanasi lies in eastern UP (Purvanchal).`, `Easy`, `MCQ`);
+    add(`Which division includes Lucknow district?`, [`Lucknow division`, `Kanpur division`, `Ayodhya division`, `Prayagraj division`], 0, `Lucknow district is in Lucknow division.`, `Easy`, `MCQ`);
+    add(`Which division includes Varanasi district?`, [`Varanasi division`, `Gorakhpur division`, `Mirzapur division`, `Azamgarh division`], 0, `Varanasi district is in Varanasi division.`, `Easy`, `MCQ`);
+    add(`Which division includes Jhansi district?`, [`Jhansi division`, `Chitrakoot division`, `Kanpur division`, `Agra division`], 0, `Jhansi district is part of Jhansi division.`, `Easy`, `MCQ`);
+    add(`Which division is NOT in Uttar Pradesh?`, [`Kota`, `Devipatan`, `Saharanpur`, `Basti`], 0, `Kota is a division of Rajasthan, not UP.`, `Moderate`, `MCQ`);
+    add(`Dudhwa National Park is located in:`, [`Lakhimpur Kheri`, `Sonbhadra`, `Mathura`, `Ballia`], 0, `Dudhwa NP lies in Lakhimpur Kheri.`, `Easy`, `MCQ`);
+    add(`Triveni Sangam is located at:`, [`Prayagraj`, `Varanasi`, `Kanpur`, `Ayodhya`], 0, `The confluence of Ganga-Yamuna is at Prayagraj.`, `Easy`, `MCQ`);
+    add(`The city of Lucknow lies on which river?`, [`Gomti`, `Ghaghara`, `Yamuna`, `Betwa`], 0, `Gomti flows through Lucknow.`, `Easy`, `MCQ`);
+    add(`Varanasi is situated on which river?`, [`Ganga`, `Yamuna`, `Gomti`, `Ghaghara`], 0, `Varanasi is on the Ganga.`, `Easy`, `MCQ`);
+    add(`Agra is situated on which river?`, [`Yamuna`, `Ganga`, `Betwa`, `Gomti`], 0, `Agra is on the Yamuna.`, `Easy`, `MCQ`);
+    add(`Gorakhpur is located on which river?`, [`Rapti`, `Yamuna`, `Betwa`, `Chambal`], 0, `Rapti flows through Gorakhpur.`, `Easy`, `MCQ`);
+    add(`Ayodhya lies on the bank of which river?`, [`Ghaghara (Sarayu)`, `Ganga`, `Gomti`, `Rapti`], 0, `Sarayu (Ghaghara) is associated with Ayodhya.`, `Moderate`, `MCQ`);
+    add(`Kanpur is located on the bank of which river?`, [`Ganga`, `Yamuna`, `Gomti`, `Ramganga`], 0, `Kanpur is on the Ganga.`, `Easy`, `MCQ`);
+    add(`Which district is part of the National Capital Region (NCR) within UP?`, [`Gautam Buddh Nagar`, `Gorakhpur`, `Prayagraj`, `Bahraich`], 0, `Noida/Gautam Buddh Nagar is within NCR.`, `Moderate`, `MCQ`);
+    add(`Which district is famous for the Taj Mahal?`, [`Agra`, `Mathura`, `Lucknow`, `Varanasi`], 0, `Agra hosts the Taj Mahal.`, `Easy`, `MCQ`);
+    add(`Which district is known for the Kumbh Mela at Triveni Sangam?`, [`Prayagraj`, `Ayodhya`, `Mathura`, `Gorakhpur`], 0, `Prayagraj hosts the Kumbh Mela.`, `Easy`, `MCQ`);
+    add(`Western UP sugarcane belt is best represented by:`, [`Muzaffarnagar`, `Sonbhadra`, `Ballia`, `Bahraich`], 0, `Muzaffarnagar is a major sugarcane belt district.`, `Moderate`, `MCQ`);
+    add(`Which pair is correctly matched?`, [`Mirzapur – Vindhyan`, `Saharanpur – Bundelkhand`, `Jhansi – Terai`, `Lakhimpur Kheri – Doab`], 0, `Mirzapur lies in the Vindhyan region.`, `Moderate`, `MCQ`);
+
+    // 46-75: Physical regions and soils
+    add(`The Bhabar belt is characterized by:`, [`Porous pebbly deposits`, `Clayey floodplains`, `Deltaic marshes`, `Lateritic crust`], 0, `Bhabar has coarse, porous pebbly sediments.`, `Moderate`, `MCQ`);
+    add(`In the Bhabar belt, streams typically:`, [`Disappear into porous deposits`, `Form deep gorges`, `Flow perennially with silt`, `Form deltas`], 0, `Streams lose surface flow due to high infiltration.`, `Moderate`, `MCQ`);
+    add(`The Terai belt is known for:`, [`Marshy, waterlogged conditions`, `Desert dunes`, `Rocky plateau`, `Saline flats`], 0, `Terai is marshy with high water table.`, `Easy`, `MCQ`);
+    add(`Terai lies immediately to the south of:`, [`Bhabar`, `Vindhyan`, `Bundelkhand`, `Doab`], 0, `Terai is directly south of the Bhabar belt.`, `Easy`, `MCQ`);
+    add(`Khadar refers to:`, [`Newer alluvium in floodplains`, `Old alluvial upland`, `Desert soil`, `Laterite soil`], 0, `Khadar is the newer, more fertile alluvium.`, `Easy`, `MCQ`);
+    add(`Bhangar refers to:`, [`Old alluvial upland with kankar`, `Recent floodplain deposits`, `Black cotton soil`, `Saline soil`], 0, `Bhangar is older alluvium with kankar nodules.`, `Easy`, `MCQ`);
+    add(`Doab means:`, [`Land between two rivers`, `River mouth`, `River source`, `Floodplain island`], 0, `Doab is the interfluve between two rivers.`, `Easy`, `MCQ`);
+    add(`Ganga–Yamuna Doab is formed by:`, [`Ganga and Yamuna`, `Ganga and Ghaghara`, `Yamuna and Betwa`, `Ganga and Son`], 0, `It is the interfluve of Ganga and Yamuna.`, `Easy`, `MCQ`);
+    add(`Bundelkhand region is mainly a:`, [`Rocky plateau`, `Coastal plain`, `Deltaic plain`, `Glacial valley`], 0, `Bundelkhand is a rocky plateau region.`, `Easy`, `MCQ`);
+    add(`Vindhyan region of UP lies mainly in:`, [`South-eastern UP`, `North-western UP`, `North-eastern UP`, `Central UP`], 0, `Vindhyan region occupies south-eastern UP.`, `Moderate`, `MCQ`);
+    add(`Alluvial soils dominate in:`, [`Gangetic plain`, `Vindhyan plateau`, `Bundelkhand plateau`, `Shivalik belt`], 0, `The Gangetic plain is largely alluvial.`, `Easy`, `MCQ`);
+    add(`Black and red soils are more common in:`, [`Bundelkhand and Vindhyan`, `Western Doab`, `Terai`, `Bhabar`], 0, `Bundelkhand–Vindhyan has red/black soils.`, `Moderate`, `MCQ`);
+    add(`Kankar nodules are typical of:`, [`Bhangar`, `Khadar`, `Terai`, `Bhabar`], 0, `Bhangar contains kankar nodules.`, `Easy`, `MCQ`);
+    add(`Eastern UP is more flood-prone mainly because of:`, [`Gentle slope and heavy rainfall`, `High mountains`, `Desert climate`, `Tidal effects`], 0, `Low slope and high rainfall cause floods.`, `Moderate`, `MCQ`);
+    add(`Western UP has extensive irrigation mainly because of:`, [`Canal network and tube wells`, `Deltaic channels`, `Tidal backwaters`, `Glacier melt only`], 0, `Dense canal/tube-well network supports irrigation.`, `Moderate`, `MCQ`);
+    add(`Shivalik range in UP is part of:`, [`Himalayan system`, `Aravalli system`, `Vindhyan system`, `Satpura system`], 0, `Shivalik is the outer Himalayan range.`, `Easy`, `MCQ`);
+    add(`The Terai region is important for:`, [`Forest and wildlife habitat`, `Desert crops`, `Coal mining`, `Coastal fisheries`], 0, `Terai supports forests and wildlife.`, `Moderate`, `MCQ`);
+    add(`Which statement is correct about Bundelkhand?`, [`Drought-prone plateau`, `High rainfall delta`, `Tidal floodplain`, `Coastal mangrove`], 0, `Bundelkhand is a drought-prone plateau.`, `Easy`, `MCQ`);
+    add(`Upper Ganga plain is located mainly in:`, [`Western UP`, `Eastern UP`, `Southern UP`, `Vindhyan region`], 0, `Upper Ganga plain occupies western UP.`, `Moderate`, `MCQ`);
+    add(`Middle Ganga plain in UP broadly corresponds to:`, [`Central UP (Awadh)`, `Western UP`, `Bundelkhand`, `Terai`], 0, `Middle Ganga plain aligns with central UP.`, `Moderate`, `MCQ`);
+    add(`Lower Ganga plain in UP corresponds largely to:`, [`Eastern UP`, `Western UP`, `Bundelkhand`, `Vindhyan`], 0, `Lower Ganga plain is eastern UP.`, `Moderate`, `MCQ`);
+    add(`The Bhabar belt is generally:`, [`Narrow and less than 30 km wide`, `Very wide desert`, `Coastal delta`, `High plateau`], 0, `Bhabar is a narrow belt along foothills.`, `Moderate`, `MCQ`);
+    add(`The Terai belt is characterized by high:`, [`Groundwater table`, `Wind erosion`, `Salinity`, `Volcanic activity`], 0, `Terai has a high groundwater table.`, `Easy`, `MCQ`);
+    add(`Which pair is correctly matched?`, [`Terai – moist alluvium`, `Bundelkhand – coastal sand`, `Doab – laterite`, `Bhabar – saline flats`], 0, `Terai soils are moist alluvium.`, `Moderate`, `MCQ`);
+    add(`The Ganga plain has a gentle slope from:`, [`Northwest to southeast`, `Northeast to southwest`, `East to west`, `South to north`], 0, `The plain slopes gently NW to SE.`, `Moderate`, `MCQ`);
+    add(`Khadar soils are generally:`, [`More fertile`, `Less fertile`, `Saline`, `Lateritic`], 0, `Khadar soils are renewed and fertile.`, `Easy`, `MCQ`);
+    add(`The Doab region is most suitable for:`, [`Intensive agriculture`, `Shifting cultivation`, `Fishing only`, `Pastoral nomadism`], 0, `Alluvial doabs support intensive farming.`, `Easy`, `MCQ`);
+    add(`Bhabar–Terai landscape is found along:`, [`Himalayan foothills`, `Coastal plains`, `Deccan plateau`, `Thar desert`], 0, `Bhabar and Terai are foothill belts.`, `Easy`, `MCQ`);
+    add(`Vindhyan region of UP is rich in:`, [`Minerals and forests`, `Coral reefs`, `Coastal dunes`, `Glacial lakes`], 0, `Vindhyan area has minerals and forests.`, `Moderate`, `MCQ`);
+    add(`Bundelkhand and Vindhyan are separated from the plains by:`, [`Escarpments/plateau margins`, `Tidal channels`, `Sand dunes`, `Alluvial levees`], 0, `Plateau margins mark the transition.`, `Moderate`, `MCQ`);
+
+    // 76-105: Climate and agro-climatic zones
+    add(`Uttar Pradesh has a climate classified as:`, [`Humid subtropical monsoon`, `Mediterranean`, `Desert`, `Tundra`], 0, `UP falls under humid subtropical monsoon climate.`, `Easy`, `MCQ`);
+    add(`Main source of rainfall in Uttar Pradesh is:`, [`Bay of Bengal branch of SW monsoon`, `Arabian Sea branch only`, `Winter monsoon`, `Polar winds`], 0, `The Bay of Bengal branch is the primary source.`, `Easy`, `MCQ`);
+    add(`Winter rainfall in UP is mainly due to:`, [`Western disturbances`, `Cyclones from Bay of Bengal`, `Local convection only`, `Monsoon reversal`], 0, `Western disturbances bring winter rain.`, `Moderate`, `MCQ`);
+    add(`Average rainfall is generally higher in:`, [`Eastern UP`, `Western UP`, `Bundelkhand only`, `Doab only`], 0, `Eastern UP receives more rainfall.`, `Easy`, `MCQ`);
+    add(`Hot, dry winds in May–June are called:`, [`Loo`, `Nor'wester`, `Mistral`, `Chinook`], 0, `Loo winds are common in north Indian plains.`, `Easy`, `MCQ`);
+    add(`Foggy conditions in winter are common in:`, [`Western and central plains`, `Vindhyan plateau`, `Bhabar only`, `Southern plateau only`], 0, `Fog is frequent in plains during winter.`, `Moderate`, `MCQ`);
+    add(`Kharif crops are sown with:`, [`Onset of monsoon`, `Winter rainfall`, `Summer irrigation only`, `Retreating monsoon in December`], 0, `Kharif sowing coincides with monsoon onset.`, `Easy`, `MCQ`);
+    add(`Rabi crops are sown in:`, [`Winter season`, `Monsoon season`, `Pre-monsoon`, `Post-monsoon only`], 0, `Rabi crops are sown in winter.`, `Easy`, `MCQ`);
+    add(`Major rabi cereal in UP is:`, [`Wheat`, `Rice`, `Maize`, `Millets`], 0, `Wheat dominates the rabi season.`, `Easy`, `MCQ`);
+    add(`Major kharif cereal in eastern UP is:`, [`Rice`, `Wheat`, `Barley`, `Gram`], 0, `Rice is the main kharif crop in eastern UP.`, `Easy`, `MCQ`);
+    add(`Sugarcane is a major cash crop mainly in:`, [`Western UP`, `Bundelkhand`, `Vindhyan plateau`, `Terai only`], 0, `Western UP has the largest sugarcane belt.`, `Moderate`, `MCQ`);
+    add(`Potato production is highest in UP mostly in:`, [`Western UP plains`, `Bundelkhand plateau`, `Vindhyan region`, `Terai only`], 0, `Western UP is a major potato belt.`, `Moderate`, `MCQ`);
+    add(`Uttar Pradesh is commonly divided into how many agro-climatic zones?`, [`9`, `5`, `12`, `15`], 0, `The commonly used classification has 9 zones.`, `Moderate`, `MCQ`);
+    add(`Tarai and Bhabar zone lies in:`, [`Northern UP along foothills`, `Southern UP plateau`, `Western Doab only`, `Eastern plains only`], 0, `Tarai-Bhabar is along the northern foothills.`, `Easy`, `MCQ`);
+    add(`Bundelkhand zone lies in:`, [`Southern UP`, `Northern UP`, `Eastern UP`, `Western UP`], 0, `Bundelkhand is in southern UP.`, `Easy`, `MCQ`);
+    add(`Vindhyan zone lies in:`, [`South-eastern UP`, `North-western UP`, `Northern plains`, `Western Doab`], 0, `Vindhyan zone is in south-east UP.`, `Moderate`, `MCQ`);
+    add(`Western Plain zone is mainly in:`, [`Western UP`, `Eastern UP`, `Bundelkhand`, `Vindhyan`], 0, `Western Plain zone covers western UP.`, `Easy`, `MCQ`);
+    add(`Central Plain zone corresponds largely to:`, [`Awadh region`, `Bundelkhand`, `Terai`, `Vindhyan`], 0, `Central Plain zone aligns with Awadh.`, `Moderate`, `MCQ`);
+    add(`North Eastern Plain zone mainly covers:`, [`Gorakhpur–Deoria belt`, `Agra–Etawah belt`, `Bundelkhand`, `Vindhyan`], 0, `This zone lies in the north-east around Gorakhpur.`, `Moderate`, `MCQ`);
+    add(`Eastern Plain zone is centered in:`, [`Varanasi–Azamgarh belt`, `Meerut–Saharanpur`, `Jhansi–Lalitpur`, `Sonbhadra–Mirzapur`], 0, `Eastern Plain zone is around Varanasi–Azamgarh.`, `Moderate`, `MCQ`);
+    add(`South Western Semi-Arid zone is mainly around:`, [`Agra–Etawah belt`, `Gorakhpur belt`, `Terai`, `Bundelkhand only`], 0, `This zone lies in the south-western belt.`, `Moderate`, `MCQ`);
+    add(`Mid Western Plain zone lies between:`, [`Ganga and Yamuna in western-central UP`, `Ghaghara and Rapti`, `Ganga and Son`, `Ken and Betwa`], 0, `Mid Western Plain is in the Ganga-Yamuna interfluve.`, `Advanced`, `MCQ`);
+    add(`Rainfall in Bundelkhand is generally:`, [`Lower and more variable`, `Highest in state`, `Uniform and heavy`, `Only winter rains`], 0, `Bundelkhand is relatively drier and variable.`, `Moderate`, `MCQ`);
+    add(`Eastern UP faces frequent floods mainly due to:`, [`High rainfall and low slope`, `Desert storms`, `Snowfall`, `Coastal tides`], 0, `High rainfall and low gradient cause floods.`, `Moderate`, `MCQ`);
+    add(`The monsoon usually withdraws from UP around:`, [`Late September to October`, `January`, `March`, `May`], 0, `Withdrawal typically occurs in late September/October.`, `Moderate`, `MCQ`);
+    add(`Which pair is correctly matched?`, [`Tarai & Bhabar – rice/sugarcane`, `Bundelkhand – high rainfall tea`, `Western Plain – coastal fisheries`, `Vindhyan – mangroves`], 0, `Tarai-Bhabar supports rice/sugarcane due to water availability.`, `Advanced`, `MCQ`);
+    add(`Assertion-Reason: A: Western UP is more irrigated than Bundelkhand. R: Canal and tube-well network is denser in western UP.`, [`Both A and R are true and R explains A`, `Both A and R are true but R does not explain A`, `A is true but R is false`, `A is false but R is true`], 0, `Western UP has denser irrigation infrastructure.`, `Advanced`, `Assertion-Reason`);
+    add(`Assertion-Reason: A: Eastern UP receives more rainfall than western UP. R: Eastern UP is closer to the Bay of Bengal branch of the monsoon.`, [`Both A and R are true and R explains A`, `Both A and R are true but R does not explain A`, `A is true but R is false`, `A is false but R is true`], 0, `Proximity to Bay of Bengal branch leads to higher rainfall.`, `Advanced`, `Assertion-Reason`);
+    add(`Which month typically records the highest temperature in UP?`, [`May`, `January`, `August`, `December`], 0, `Peak summer temperatures occur in May-June.`, `Easy`, `MCQ`);
+    add(`Which of the following is NOT an agro-climatic zone of UP?`, [`Coastal Plain`, `Tarai & Bhabar`, `Vindhyan`, `Bundelkhand`], 0, `UP has no coastal agro-climatic zone.`, `Easy`, `MCQ`);
+
+    // 106-165: Rivers and tributaries
+    add(`Which river forms the main trunk across Uttar Pradesh?`, [`Ganga`, `Narmada`, `Godavari`, `Krishna`], 0, `Ganga is the primary river system in UP.`, `Easy`, `MCQ`);
+    add(`Gomti is a tributary of:`, [`Ganga`, `Yamuna`, `Ghaghara`, `Son`], 0, `Gomti joins the Ganga near Ghazipur.`, `Easy`, `MCQ`);
+    add(`Ramganga is a tributary of:`, [`Ganga`, `Yamuna`, `Ghaghara`, `Betwa`], 0, `Ramganga is a tributary of Ganga.`, `Easy`, `MCQ`);
+    add(`Ghaghara (Sarayu) is a tributary of:`, [`Ganga`, `Yamuna`, `Son`, `Betwa`], 0, `Ghaghara is a major tributary of Ganga.`, `Easy`, `MCQ`);
+    add(`Rapti is a tributary of:`, [`Ghaghara`, `Ganga`, `Yamuna`, `Betwa`], 0, `Rapti joins Ghaghara.`, `Moderate`, `MCQ`);
+    add(`Sharda (Sarda) is a tributary of:`, [`Ghaghara`, `Yamuna`, `Son`, `Betwa`], 0, `Sharda joins the Ghaghara.`, `Moderate`, `MCQ`);
+    add(`Gandak is a tributary of:`, [`Ganga`, `Yamuna`, `Ghaghara`, `Son`], 0, `Gandak joins the Ganga downstream.`, `Moderate`, `MCQ`);
+    add(`Son (Sone) is a tributary of:`, [`Ganga`, `Yamuna`, `Ghaghara`, `Betwa`], 0, `Son is a major right-bank tributary of Ganga.`, `Easy`, `MCQ`);
+    add(`Rihand is a tributary of:`, [`Son`, `Ganga`, `Yamuna`, `Ghaghara`], 0, `Rihand is a tributary of the Son.`, `Moderate`, `MCQ`);
+    add(`Betwa is a tributary of:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Son`], 0, `Betwa joins the Yamuna.`, `Easy`, `MCQ`);
+    add(`Ken is a tributary of:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Son`], 0, `Ken is a tributary of Yamuna.`, `Easy`, `MCQ`);
+    add(`Chambal is a tributary of:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Son`], 0, `Chambal joins Yamuna near Etawah.`, `Moderate`, `MCQ`);
+    add(`Sindh is a tributary of:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Son`], 0, `Sindh is a Yamuna tributary.`, `Moderate`, `MCQ`);
+    add(`Hindon is a tributary of:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Betwa`], 0, `Hindon joins Yamuna near Noida.`, `Moderate`, `MCQ`);
+    add(`Varuna joins the Ganga near:`, [`Varanasi`, `Kanpur`, `Prayagraj`, `Bijnor`], 0, `Varuna joins Ganga near Varanasi.`, `Advanced`, `MCQ`);
+    add(`Ramganga joins Ganga near:`, [`Kannauj`, `Varanasi`, `Prayagraj`, `Gorakhpur`], 0, `Ramganga confluence is near Kannauj.`, `Advanced`, `MCQ`);
+    add(`Gomti joins Ganga near:`, [`Saidpur (Ghazipur)`, `Agra`, `Jhansi`, `Bahraich`], 0, `Gomti meets Ganga near Saidpur.`, `Advanced`, `MCQ`);
+    add(`Which river is also called Mahakali in Nepal?`, [`Sharda`, `Gomti`, `Betwa`, `Son`], 0, `Sharda is known as Mahakali in Nepal.`, `Moderate`, `MCQ`);
+    add(`Which river forms part of the UP–Nepal boundary?`, [`Sharda`, `Chambal`, `Betwa`, `Son`], 0, `Sharda forms the boundary with Nepal.`, `Moderate`, `MCQ`);
+    add(`Mathura is situated on the bank of:`, [`Yamuna`, `Ganga`, `Gomti`, `Betwa`], 0, `Mathura is on the Yamuna.`, `Easy`, `MCQ`);
+    add(`Gorakhpur is situated on the bank of:`, [`Rapti`, `Yamuna`, `Betwa`, `Chambal`], 0, `Rapti flows through Gorakhpur.`, `Easy`, `MCQ`);
+    add(`Jhansi is situated on the bank of:`, [`Betwa`, `Ganga`, `Gomti`, `Ghaghara`], 0, `Betwa flows near Jhansi.`, `Moderate`, `MCQ`);
+    add(`Banda district is associated with which river?`, [`Ken`, `Gomti`, `Hindon`, `Ramganga`], 0, `Ken river flows through Banda district.`, `Moderate`, `MCQ`);
+    add(`Which river is also called Sarayu?`, [`Ghaghara`, `Gomti`, `Betwa`, `Son`], 0, `Ghaghara is known as Sarayu in UP.`, `Moderate`, `MCQ`);
+    add(`Ganga enters Uttar Pradesh near:`, [`Bijnor`, `Ghazipur`, `Ballia`, `Prayagraj`], 0, `Ganga enters UP near Bijnor.`, `Advanced`, `MCQ`);
+    add(`Yamuna enters Uttar Pradesh near:`, [`Saharanpur`, `Ballia`, `Lakhimpur`, `Sonbhadra`], 0, `Yamuna enters UP near Saharanpur.`, `Advanced`, `MCQ`);
+    add(`Which river originates from Gomat Taal in Pilibhit?`, [`Gomti`, `Betwa`, `Rapti`, `Ken`], 0, `Gomti rises from Gomat Taal.`, `Moderate`, `MCQ`);
+    add(`Rapti river originates in:`, [`Nepal`, `Rajasthan`, `Gujarat`, `Odisha`], 0, `Rapti originates in Nepal.`, `Moderate`, `MCQ`);
+    add(`Which of the following is a left-bank tributary of Ganga in UP?`, [`Gomti`, `Yamuna`, `Betwa`, `Ken`], 0, `Gomti joins Ganga from the left bank.`, `Moderate`, `MCQ`);
+    add(`Which of the following is a right-bank tributary of Yamuna?`, [`Chambal`, `Gomti`, `Ghaghara`, `Gandak`], 0, `Chambal joins Yamuna from the right bank.`, `Moderate`, `MCQ`);
+    add(`Which river system dominates the eastern UP plain?`, [`Ghaghara–Rapti`, `Narmada–Tapti`, `Godavari–Krishna`, `Mahanadi–Brahmani`], 0, `Eastern UP is dominated by Ghaghara–Rapti system.`, `Advanced`, `MCQ`);
+    add(`Chambal meets Yamuna near:`, [`Etawah`, `Varanasi`, `Meerut`, `Gorakhpur`], 0, `Chambal joins Yamuna near Etawah.`, `Advanced`, `MCQ`);
+    add(`Bundelkhand is mainly drained by:`, [`Betwa and Ken`, `Gomti and Ghaghara`, `Rapti and Sharda`, `Ramganga and Sai`], 0, `Betwa and Ken are key Bundelkhand rivers.`, `Moderate`, `MCQ`);
+    add(`Vindhyan–Sonbhadra region is mainly drained by:`, [`Son`, `Rapti`, `Gomti`, `Hindon`], 0, `Son river drains the Vindhyan-Sonbhadra region.`, `Moderate`, `MCQ`);
+    add(`Rihand reservoir (Govind Ballabh Pant Sagar) is on river:`, [`Rihand`, `Son`, `Betwa`, `Ghaghara`], 0, `The reservoir is on the Rihand river.`, `Easy`, `MCQ`);
+    add(`Which of the following rivers is NOT in the Ganga basin of UP?`, [`Betwa`, `Gomti`, `Ghaghara`, `Ramganga`], 0, `Betwa is part of the Yamuna basin.`, `Moderate`, `MCQ`);
+    add(`Which of the following rivers is NOT in the Yamuna basin of UP?`, [`Ghaghara`, `Betwa`, `Chambal`, `Ken`], 0, `Ghaghara belongs to the Ganga basin.`, `Moderate`, `MCQ`);
+    add(`Sai river is a tributary of:`, [`Gomti`, `Yamuna`, `Son`, `Chambal`], 0, `Sai joins the Gomti.`, `Advanced`, `MCQ`);
+    add(`Tons (UP) is a tributary of:`, [`Ganga`, `Yamuna`, `Son`, `Chambal`], 0, `Tons is considered a tributary of Ganga.`, `Advanced`, `MCQ`);
+    add(`Which river forms part of the boundary between UP and Haryana/Delhi?`, [`Yamuna`, `Gomti`, `Rapti`, `Sharda`], 0, `Yamuna forms a boundary stretch with Haryana/Delhi.`, `Moderate`, `MCQ`);
+    add(`Hindon river flows mainly through:`, [`Western UP`, `Eastern UP`, `Bundelkhand`, `Vindhyan`], 0, `Hindon is a western UP tributary.`, `Moderate`, `MCQ`);
+    add(`Sharda river is associated with which canal system?`, [`Sharda Sahayak / Sharda Canal`, `Upper Ganga Canal`, `Agra Canal`, `Eastern Yamuna Canal`], 0, `Sharda Barrage feeds the Sharda Canal system.`, `Moderate`, `MCQ`);
+    add(`Which river is associated with the Chambal ravines in south-west UP?`, [`Chambal`, `Gomti`, `Rapti`, `Ramganga`], 0, `Chambal ravines are noted in south-west UP.`, `Moderate`, `MCQ`);
+    add(`Which river is associated with the Ken–Betwa link region in UP?`, [`Ken`, `Gomti`, `Rapti`, `Ghaghara`], 0, `Ken is part of the Ken–Betwa interlinking region.`, `Advanced`, `MCQ`);
+    add(`Which of the following is a Himalayan river in UP?`, [`Ghaghara`, `Chambal`, `Betwa`, `Ken`], 0, `Ghaghara is a Himalayan river.`, `Moderate`, `MCQ`);
+    add(`Which of the following rivers flows through the Dudhwa–Terai belt?`, [`Sharda`, `Ken`, `Chambal`, `Betwa`], 0, `Sharda flows through Terai belt in northern UP.`, `Advanced`, `MCQ`);
+    add(`Ganga–Yamuna Doab is bounded on the west by:`, [`Yamuna`, `Ganga`, `Ghaghara`, `Betwa`], 0, `The western boundary is Yamuna.`, `Easy`, `MCQ`);
+    add(`Ganga–Yamuna Doab is bounded on the east by:`, [`Ganga`, `Yamuna`, `Ghaghara`, `Ramganga`], 0, `The eastern boundary is Ganga.`, `Easy`, `MCQ`);
+    add(`Which river is the main drainage of the Rohilkhand region?`, [`Ramganga`, `Ken`, `Betwa`, `Chambal`], 0, `Ramganga drains Rohilkhand.`, `Advanced`, `MCQ`);
+    add(`Match the following correctly: 1. Gomti – Lucknow 2. Yamuna – Agra 3. Rapti – Gorakhpur 4. Betwa – Jhansi`, [`All four pairs are correct`, `Only 1 and 2 are correct`, `Only 2 and 3 are correct`, `Only 1, 2 and 3 are correct`], 0, `All listed city-river pairs are correct.`, `Advanced`, `Match the Following`);
+    add(`Which river joins Ganga near the city of Varanasi via the Varuna channel?`, [`Varuna`, `Sai`, `Ken`, `Hindon`], 0, `Varuna joins Ganga near Varanasi.`, `Advanced`, `MCQ`);
+    add(`Which river is most associated with the Awadh plains?`, [`Gomti`, `Ken`, `Chambal`, `Betwa`], 0, `Gomti flows through the Awadh region.`, `Moderate`, `MCQ`);
+    add(`Which river is most associated with the Saryu river system in eastern UP?`, [`Ghaghara`, `Betwa`, `Son`, `Hindon`], 0, `Ghaghara is locally known as Sarayu.`, `Moderate`, `MCQ`);
+    add(`Which river forms the natural link between western UP and Delhi region?`, [`Yamuna`, `Gomti`, `Rapti`, `Sharda`], 0, `Yamuna links western UP with Delhi.`, `Moderate`, `MCQ`);
+    add(`Which river’s basin hosts the Rihand and Obra industrial region?`, [`Son basin`, `Ganga basin`, `Yamuna basin`, `Ghaghara basin`], 0, `Rihand–Obra area lies in the Son basin.`, `Advanced`, `MCQ`);
+    add(`Which river is responsible for the fertile Ganga–Yamuna Doab alluvium?`, [`Ganga and Yamuna`, `Son and Ken`, `Ghaghara and Rapti`, `Betwa and Chambal`], 0, `The Doab alluvium is from Ganga and Yamuna.`, `Easy`, `MCQ`);
+    add(`Which river is associated with the floodplains of eastern UP and joins Ganga downstream?`, [`Ghaghara`, `Chambal`, `Betwa`, `Ken`], 0, `Ghaghara creates extensive floodplains in eastern UP.`, `Advanced`, `MCQ`);
+    add(`Which river drains the northeastern plains and joins Ghaghara?`, [`Rapti`, `Chambal`, `Betwa`, `Son`], 0, `Rapti drains the northeastern plains and joins Ghaghara.`, `Moderate`, `MCQ`);
+
+    // 166-195: Dams, barrages, canals, irrigation
+    add(`Rihand Dam is located on the river:`, [`Rihand`, `Son`, `Betwa`, `Ghaghara`], 0, `Rihand Dam is built on the Rihand River in Sonbhadra.`, `Easy`, `MCQ`);
+    add(`Matatila Dam is located on the river:`, [`Betwa`, `Ganga`, `Gomti`, `Sharda`], 0, `Matatila is a Betwa river dam.`, `Moderate`, `MCQ`);
+    add(`Parichha Dam is located on the river:`, [`Betwa`, `Ken`, `Rapti`, `Ganga`], 0, `Parichha Dam is on the Betwa near Jhansi.`, `Moderate`, `MCQ`);
+    add(`Sharda Barrage is built on the river:`, [`Sharda`, `Ghaghara`, `Gomti`, `Yamuna`], 0, `Sharda Barrage is on the Sharda river.`, `Easy`, `MCQ`);
+    add(`Narora Barrage is built on the river:`, [`Ganga`, `Yamuna`, `Betwa`, `Ghaghara`], 0, `Narora Barrage is on the Ganga.`, `Easy`, `MCQ`);
+    add(`Bijnor Barrage is built on the river:`, [`Ganga`, `Rapti`, `Betwa`, `Ken`], 0, `Bijnor Barrage is on the Ganga.`, `Moderate`, `MCQ`);
+    add(`Kanpur Barrage is built on the river:`, [`Ganga`, `Yamuna`, `Gomti`, `Ghaghara`], 0, `Kanpur Barrage is on the Ganga.`, `Easy`, `MCQ`);
+    add(`Okhla Barrage is built on the river:`, [`Yamuna`, `Ganga`, `Betwa`, `Ghaghara`], 0, `Okhla Barrage is on Yamuna at Delhi-UP border.`, `Easy`, `MCQ`);
+    add(`Mathura (Gokul) Barrage is built on the river:`, [`Yamuna`, `Ganga`, `Sharda`, `Son`], 0, `Gokul Barrage is on Yamuna near Mathura.`, `Easy`, `MCQ`);
+    add(`Agra Barrage is built on the river:`, [`Yamuna`, `Ganga`, `Gomti`, `Ken`], 0, `Agra Barrage is on the Yamuna.`, `Easy`, `MCQ`);
+    add(`Upper Ganga Canal originates at:`, [`Haridwar (Bhimgoda Barrage)`, `Narora Barrage`, `Bijnor Barrage`, `Kanpur Barrage`], 0, `Upper Ganga Canal starts at Haridwar.`, `Moderate`, `MCQ`);
+    add(`Lower Ganga Canal offtakes from:`, [`Narora Barrage`, `Haridwar`, `Kanpur Barrage`, `Bijnor Barrage`], 0, `Lower Ganga Canal starts from Narora.`, `Moderate`, `MCQ`);
+    add(`Sharda Sahayak Canal is linked to:`, [`Sharda Canal system`, `Agra Canal`, `Eastern Yamuna Canal`, `Upper Ganga Canal`], 0, `Sharda Sahayak is part of the Sharda system.`, `Moderate`, `MCQ`);
+    add(`Agra Canal takes off from:`, [`Okhla Barrage`, `Mathura Barrage`, `Narora Barrage`, `Bijnor Barrage`], 0, `Agra Canal originates from Okhla Barrage.`, `Moderate`, `MCQ`);
+    add(`Rihand reservoir is also known as:`, [`Govind Ballabh Pant Sagar`, `Dhauli Sagar`, `Rana Pratap Sagar`, `Bhakra`], 0, `Rihand creates Govind Ballabh Pant Sagar.`, `Moderate`, `MCQ`);
+    add(`Matatila project is located in which region of UP?`, [`Bundelkhand`, `Terai`, `Doab`, `Rohilkhand`], 0, `Matatila is a Bundelkhand project.`, `Moderate`, `MCQ`);
+    add(`Which project is most associated with Sonbhadra district?`, [`Rihand Dam`, `Sharda Barrage`, `Narora Barrage`, `Agra Canal`], 0, `Rihand Dam is in Sonbhadra.`, `Easy`, `MCQ`);
+    add(`Which dam is most associated with Jhansi district?`, [`Parichha`, `Rihand`, `Sharda`, `Narora`], 0, `Parichha dam is near Jhansi.`, `Moderate`, `MCQ`);
+    add(`Which canal system mainly irrigates eastern UP?`, [`Sharda Sahayak`, `Agra Canal`, `Upper Ganga Canal`, `Eastern Yamuna Canal`], 0, `Sharda Sahayak supports irrigation in eastern UP.`, `Advanced`, `MCQ`);
+    add(`Which statement is correct?`, [`Upper Ganga Canal is older than Lower Ganga Canal`, `Lower Ganga Canal predates Upper Ganga Canal`, `Both were built in 2000`, `Neither is in UP`], 0, `Upper Ganga Canal is a historic canal, older than Lower Ganga.`, `Advanced`, `MCQ`);
+    add(`Which barrage is associated with hydroelectric generation and the Narora Atomic Power Station area?`, [`Narora Barrage`, `Bijnor Barrage`, `Agra Barrage`, `Okhla Barrage`], 0, `Narora Barrage is linked with the Narora area.`, `Advanced`, `MCQ`);
+    add(`Which project primarily supports irrigation in the Ganga–Yamuna Doab?`, [`Upper Ganga Canal`, `Sharda Sahayak`, `Chambal Canal`, `Kosi Canal`], 0, `Upper Ganga Canal irrigates the Doab region.`, `Moderate`, `MCQ`);
+    add(`Which river project is most important for Bundelkhand irrigation?`, [`Betwa projects (Matatila/Parichha)`, `Sharda Barrage`, `Narora Barrage`, `Okhla Barrage`], 0, `Betwa projects are key for Bundelkhand.`, `Moderate`, `MCQ`);
+    add(`Which barrage is on the Yamuna near Mathura?`, [`Gokul/Mathura Barrage`, `Narora Barrage`, `Sharda Barrage`, `Bijnor Barrage`], 0, `Mathura Barrage is on the Yamuna.`, `Easy`, `MCQ`);
+    add(`Which of the following pairs is correctly matched?`, [`Sharda Barrage – Sharda River`, `Narora Barrage – Betwa`, `Matatila – Gomti`, `Parichha – Ghaghara`], 0, `Sharda Barrage is on Sharda river.`, `Easy`, `MCQ`);
+    add(`Which of the following is a Ganga barrage in UP?`, [`Bijnor`, `Agra`, `Okhla`, `Mathura`], 0, `Bijnor Barrage is on the Ganga.`, `Moderate`, `MCQ`);
+    add(`Which canal is linked with Haridwar as headworks?`, [`Upper Ganga Canal`, `Sharda Canal`, `Agra Canal`, `Sharda Sahayak`], 0, `Upper Ganga Canal originates at Haridwar.`, `Moderate`, `MCQ`);
+    add(`Which project is most associated with Lakhimpur Kheri?`, [`Sharda Barrage`, `Parichha Dam`, `Rihand Dam`, `Agra Barrage`], 0, `Sharda Barrage lies near Lakhimpur Kheri.`, `Moderate`, `MCQ`);
+    add(`Assertion-Reason: A: Sharda Canal system is vital for eastern UP irrigation. R: It originates from Sharda Barrage in the Terai belt.`, [`Both A and R are true and R explains A`, `Both A and R are true but R does not explain A`, `A is true but R is false`, `A is false but R is true`], 0, `Sharda system supports eastern UP and originates at Sharda Barrage.`, `Advanced`, `Assertion-Reason`);
+    add(`Which dam-reservoir pair is correctly matched?`, [`Rihand – Govind Ballabh Pant Sagar`, `Matatila – Nagarjuna Sagar`, `Parichha – Rana Pratap Sagar`, `Narora – Bhakra`], 0, `Rihand creates Govind Ballabh Pant Sagar.`, `Moderate`, `MCQ`);
+    add(`Which river system supports the maximum canal irrigation in western UP?`, [`Ganga–Yamuna`, `Son–Rihand`, `Ghaghara–Rapti`, `Ken–Betwa`], 0, `Western UP irrigation is dominated by Ganga–Yamuna canals.`, `Advanced`, `MCQ`);
+    add(`Which of the following is NOT a major irrigation project in UP?`, [`Bhakra Nangal`, `Upper Ganga Canal`, `Sharda Canal`, `Agra Canal`], 0, `Bhakra Nangal is not in UP.`, `Easy`, `MCQ`);
+
+    // 196-210: Wetlands, wildlife, waterfalls
+    add(`Dudhwa National Park is located in which ecological belt?`, [`Terai`, `Bundelkhand`, `Vindhyan`, `Doab`], 0, `Dudhwa NP lies in the Terai belt.`, `Moderate`, `MCQ`);
+    add(`Katarniaghat Wildlife Sanctuary is located in:`, [`Bahraich`, `Agra`, `Jhansi`, `Sonbhadra`], 0, `Katarniaghat is in Bahraich.`, `Moderate`, `MCQ`);
+    add(`National Chambal Sanctuary in UP is associated with the river:`, [`Chambal`, `Ganga`, `Ghaghara`, `Rapti`], 0, `The sanctuary is along the Chambal.`, `Moderate`, `MCQ`);
+    add(`Suraha Tal wetland is located in:`, [`Ballia`, `Meerut`, `Jhansi`, `Aligarh`], 0, `Suraha Tal is in Ballia district.`, `Advanced`, `MCQ`);
+    add(`Keetham Lake (Sur Sarovar) is located near:`, [`Agra`, `Varanasi`, `Lucknow`, `Gorakhpur`], 0, `Keetham Lake lies near Agra.`, `Moderate`, `MCQ`);
+    add(`Bakhira Tal wetland is located in:`, [`Sant Kabir Nagar`, `Kanpur`, `Etawah`, `Sitapur`], 0, `Bakhira Tal is in Sant Kabir Nagar.`, `Advanced`, `MCQ`);
+    add(`Sandi Bird Sanctuary is located in:`, [`Hardoi`, `Ghazipur`, `Bijnor`, `Mirzapur`], 0, `Sandi Bird Sanctuary is in Hardoi district.`, `Advanced`, `MCQ`);
+    add(`Saman Bird Sanctuary is located in:`, [`Mainpuri`, `Gorakhpur`, `Bareilly`, `Bahraich`], 0, `Saman Bird Sanctuary lies in Mainpuri.`, `Advanced`, `MCQ`);
+    add(`Samaspur Bird Sanctuary is located in:`, [`Rae Bareli`, `Ballia`, `Lalitpur`, `Saharanpur`], 0, `Samaspur Bird Sanctuary lies in Rae Bareli.`, `Advanced`, `MCQ`);
+    add(`Nawabganj (Shaheed C.S. Azad) Bird Sanctuary is located in:`, [`Unnao`, `Chitrakoot`, `Ballia`, `Basti`], 0, `Nawabganj Bird Sanctuary lies in Unnao.`, `Advanced`, `MCQ`);
+    add(`Rajdari and Devdari waterfalls are part of:`, [`Chandraprabha Wildlife Sanctuary`, `Dudhwa National Park`, `Katarniaghat Sanctuary`, `National Chambal Sanctuary`], 0, `These waterfalls are in Chandraprabha area (Chandauli).`, `Advanced`, `MCQ`);
+    add(`Lakhaniya Dari waterfall is located in:`, [`Mirzapur`, `Agra`, `Kanpur`, `Meerut`], 0, `Lakhaniya Dari is in Mirzapur.`, `Advanced`, `MCQ`);
+    add(`Which of the following is correctly matched?`, [`Dudhwa – Terai`, `Bundelkhand – Mangrove`, `Vindhyan – Coral reef`, `Doab – Desert dunes`], 0, `Dudhwa is in the Terai belt.`, `Moderate`, `MCQ`);
+    add(`Assertion-Reason: A: Terai belt supports rich wildlife. R: High groundwater and wetlands sustain dense vegetation.`, [`Both A and R are true and R explains A`, `Both A and R are true but R does not explain A`, `A is true but R is false`, `A is false but R is true`], 0, `Wetlands support dense vegetation and wildlife.`, `Advanced`, `Assertion-Reason`);
+    add(`Which of the following wetlands is in eastern UP?`, [`Suraha Tal`, `Keetham Lake`, `Sandi Bird Sanctuary`, `Saman Bird Sanctuary`], 0, `Suraha Tal is in Ballia (eastern UP).`, `Advanced`, `MCQ`);
+
+    // 211-220: Agriculture & economy / mixed
+    add(`Which crop is most associated with the western UP sugarcane belt?`, [`Sugarcane`, `Tea`, `Jute`, `Coffee`], 0, `Western UP is a major sugarcane producer.`, `Easy`, `MCQ`);
+    add(`Which crop dominates the rabi season in UP?`, [`Wheat`, `Rice`, `Jowar`, `Maize`], 0, `Wheat is the main rabi crop.`, `Easy`, `MCQ`);
+    add(`Rice cultivation is most extensive in:`, [`Eastern UP plains`, `Bundelkhand plateau`, `Vindhyan plateau`, `Western semi-arid zone`], 0, `Eastern UP is a major rice belt.`, `Moderate`, `MCQ`);
+    add(`Pulses and oilseeds are relatively important in:`, [`Bundelkhand`, `Terai`, `Western Doab only`, `Sharda canal command only`], 0, `Bundelkhand’s drier climate favors pulses/oilseeds.`, `Moderate`, `MCQ`);
+    add(`Which of the following pairs is correctly matched?`, [`Potato – Western UP`, `Tea – Bundelkhand`, `Coffee – Terai`, `Rubber – Vindhyan`], 0, `Potato is a major crop in western UP.`, `Moderate`, `MCQ`);
+    add(`Dairy and livestock economy is strongest in:`, [`Western and central UP plains`, `Vindhyan plateau only`, `Terai forests only`, `Chambal ravines only`], 0, `Plains with fodder and markets support dairy.`, `Moderate`, `MCQ`);
+    add(`Which statement best describes irrigation in UP?`, [`Western UP has higher canal and tube-well irrigation`, `Bundelkhand has the highest canal density`, `Eastern UP relies only on rainfall`, `Terai has no irrigation`], 0, `Western UP has dense irrigation networks.`, `Moderate`, `MCQ`);
+    add(`Which of the following is a correct match?`, [`Wheat–Rabi`, `Rice–Rabi`, `Gram–Kharif`, `Maize–Winter only`], 0, `Wheat is a rabi crop.`, `Easy`, `MCQ`);
+    add(`Which sector is most dependent on the Ganga–Yamuna alluvial plains?`, [`Intensive agriculture`, `Ocean fishing`, `Desert pastoralism`, `Mountain tourism only`], 0, `Alluvial plains enable intensive farming.`, `Easy`, `MCQ`);
+    add(`Assertion-Reason: A: UP’s plains support high population density. R: Fertile alluvial soils and irrigation create high agricultural productivity.`, [`Both A and R are true and R explains A`, `Both A and R are true but R does not explain A`, `A is true but R is false`, `A is false but R is true`], 0, `High productivity supports dense population.`, `Advanced`, `Assertion-Reason`);
+
+    const questionList = document.getElementById('question-list');
+    const paletteGrid = document.getElementById('palette-grid');
+    const totalCount = document.getElementById('total-count');
+    const easyCount = document.getElementById('easy-count');
+    const moderateCount = document.getElementById('moderate-count');
+    const advancedCount = document.getElementById('advanced-count');
+
+    totalCount.textContent = questions.length;
+
+    const difficultyCounts = { Easy: 0, Moderate: 0, Advanced: 0 };
+
+    const state = {
+      visited: new Set(),
+      answered: new Map()
+    };
+
+    const makeQuestionCard = (q, index) => {
+      difficultyCounts[q.difficulty] = (difficultyCounts[q.difficulty] || 0) + 1;
+
+      const card = document.createElement('section');
+      card.className = 'question-card';
+      card.id = `q-${index + 1}`;
+      card.dataset.index = index;
+
+      const header = document.createElement('div');
+      header.className = 'question-header';
+      header.innerHTML = `<span class="q-number">Q${index + 1}</span>` +
+        `<span class="badge difficulty">${q.difficulty}</span>` +
+        `<span class="badge type">${q.type}</span>`;
+
+      const text = document.createElement('div');
+      text.className = 'question-text';
+      text.textContent = q.question;
+
+      const options = document.createElement('div');
+      options.className = 'options';
+
+      const feedback = document.createElement('div');
+      feedback.className = 'feedback';
+
+      const explanation = document.createElement('details');
+      explanation.className = 'explanation';
+      explanation.innerHTML = `<summary>Explanation</summary><p>${q.explanation}</p>`;
+
+      q.options.forEach((opt, optIndex) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.type = 'button';
+        btn.textContent = opt;
+        btn.addEventListener('click', () => handleAnswer(index, optIndex, options, feedback, explanation));
+        options.appendChild(btn);
+      });
+
+      card.append(header, text, options, feedback, explanation);
+      return card;
+    };
+
+    const paletteButtons = [];
+
+    const makePaletteButton = (index) => {
+      const btn = document.createElement('button');
+      btn.className = 'palette-btn';
+      btn.textContent = index + 1;
+      btn.addEventListener('click', () => {
+        markVisited(index);
+        scrollToQuestion(index);
+      });
+      return btn;
+    };
+
+    const scrollToQuestion = (index) => {
+      const target = document.getElementById(`q-${index + 1}`);
+      if (!target) return;
+      target.classList.add('highlight');
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => target.classList.remove('highlight'), 1200);
+    };
+
+    const markVisited = (index) => {
+      if (state.answered.has(index)) return;
+      if (!state.visited.has(index)) {
+        state.visited.add(index);
+        updatePalette(index);
+      }
+    };
+
+    const handleAnswer = (index, optIndex, optionsContainer, feedback, explanation) => {
+      if (state.answered.has(index)) return;
+      const q = questions[index];
+      const optionButtons = optionsContainer.querySelectorAll('.option-btn');
+      const isCorrect = optIndex === q.answer;
+      optionButtons.forEach((btn, idx) => {
+        if (idx === q.answer) btn.classList.add('correct');
+        if (idx === optIndex && !isCorrect) btn.classList.add('incorrect');
+        btn.disabled = true;
+      });
+
+      feedback.style.display = 'block';
+      feedback.textContent = isCorrect ? 'Correct Answer' : 'Incorrect Answer';
+      feedback.classList.toggle('correct', isCorrect);
+      feedback.classList.toggle('incorrect', !isCorrect);
+
+      explanation.style.display = 'block';
+
+      state.answered.set(index, isCorrect ? 'correct' : 'incorrect');
+      updatePalette(index);
+    };
+
+    const updatePalette = (index) => {
+      const btn = paletteButtons[index];
+      if (!btn) return;
+      btn.classList.remove('visited', 'correct', 'incorrect');
+      if (state.answered.has(index)) {
+        btn.classList.add(state.answered.get(index));
+      } else if (state.visited.has(index)) {
+        btn.classList.add('visited');
+      }
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index);
+            markVisited(idx);
+          }
+        });
+      },
+      { threshold: 0.35 }
+    );
+
+    const fragment = document.createDocumentFragment();
+    const paletteFragment = document.createDocumentFragment();
+
+    questions.forEach((q, idx) => {
+      const card = makeQuestionCard(q, idx);
+      fragment.appendChild(card);
+      observer.observe(card);
+
+      const btn = makePaletteButton(idx);
+      paletteButtons.push(btn);
+      paletteFragment.appendChild(btn);
+    });
+
+    questionList.appendChild(fragment);
+    paletteGrid.appendChild(paletteFragment);
+
+    easyCount.textContent = difficultyCounts.Easy || 0;
+    moderateCount.textContent = difficultyCounts.Moderate || 0;
+    advancedCount.textContent = difficultyCounts.Advanced || 0;
+
+    const paletteToggle = document.getElementById('palette-toggle');
+    paletteToggle.addEventListener('click', () => {
+      document.body.classList.toggle('palette-open');
+    });
+  </script>
+</body>
+</html>

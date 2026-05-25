@@ -581,76 +581,20 @@ How many pairs given above are correctly matched?`;
     ];
 
     const matchQuestions = [
-      { question: 'Match the following (Region — District):
-1. Rohilkhand
-2. Bundelkhand
-3. Vindhyan
-4. Terai', options: ['1-Bareilly, 2-Jhansi, 3-Sonbhadra, 4-Lakhimpur Kheri', '1-Jhansi, 2-Bareilly, 3-Sonbhadra, 4-Lakhimpur Kheri', '1-Bareilly, 2-Jhansi, 3-Mirzapur, 4-Agra', '1-Moradabad, 2-Jhansi, 3-Sonbhadra, 4-Meerut'], answer: 0, explanation: 'Rohilkhand-Bareilly, Bundelkhand-Jhansi, Vindhyan-Sonbhadra, Terai-Lakhimpur Kheri.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (River — City):
-1. Ganga
-2. Yamuna
-3. Gomti
-4. Rapti', options: ['1-Kanpur, 2-Agra, 3-Lucknow, 4-Gorakhpur', '1-Varanasi, 2-Agra, 3-Varanasi, 4-Lucknow', '1-Kanpur, 2-Mathura, 3-Jhansi, 4-Gorakhpur', '1-Agra, 2-Kanpur, 3-Lucknow, 4-Rapti'], answer: 0, explanation: 'The correct city–river matches are Kanpur, Agra, Lucknow, and Gorakhpur.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Project — River):
-1. Rihand Dam
-2. Matatila Dam
-3. Parichha Dam
-4. Sharda Barrage', options: ['1-Rihand, 2-Betwa, 3-Betwa, 4-Sharda', '1-Son, 2-Betwa, 3-Ken, 4-Ganga', '1-Rihand, 2-Gomti, 3-Betwa, 4-Yamuna', '1-Rihand, 2-Betwa, 3-Ghaghara, 4-Sharda'], answer: 0, explanation: 'Rihand on Rihand, Matatila/Parichha on Betwa, Sharda Barrage on Sharda.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Barrage — River):
-1. Narora
-2. Bijnor
-3. Okhla
-4. Gokul (Mathura)', options: ['1-Ganga, 2-Ganga, 3-Yamuna, 4-Yamuna', '1-Yamuna, 2-Ganga, 3-Ganga, 4-Yamuna', '1-Ganga, 2-Yamuna, 3-Yamuna, 4-Ganga', '1-Ganga, 2-Ganga, 3-Yamuna, 4-Ganga'], answer: 0, explanation: 'Narora and Bijnor are on Ganga; Okhla and Gokul are on Yamuna.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Agro-climatic zone — Core area):
-1. Tarai & Bhabar
-2. Western Plain
-3. Bundelkhand
-4. Vindhyan', options: ['1-Northern foothills, 2-Western UP plains, 3-Jhansi-Lalitpur, 4-Sonbhadra-Mirzapur', '1-Eastern plains, 2-Western UP plains, 3-Agra-Etawah, 4-Gorakhpur-Deoria', '1-Northern foothills, 2-Awadh, 3-Jhansi-Lalitpur, 4-Gorakhpur-Deoria', '1-Northern foothills, 2-Western UP plains, 3-Bareilly-Moradabad, 4-Sonbhadra-Mirzapur'], answer: 0, explanation: 'Tarai–Bhabar in north, Western Plain in west, Bundelkhand in south, Vindhyan in SE.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Wetland/Sanctuary — District):
-1. Suraha Tal
-2. Bakhira Tal
-3. Saman Bird Sanctuary
-4. Samaspur Bird Sanctuary', options: ['1-Ballia, 2-Sant Kabir Nagar, 3-Mainpuri, 4-Rae Bareli', '1-Agra, 2-Sant Kabir Nagar, 3-Mainpuri, 4-Unnao', '1-Ballia, 2-Hardoi, 3-Mainpuri, 4-Rae Bareli', '1-Ballia, 2-Sant Kabir Nagar, 3-Bareilly, 4-Rae Bareli'], answer: 0, explanation: 'These wetlands/sanctuaries correspond to Ballia, Sant Kabir Nagar, Mainpuri, and Rae Bareli.', difficulty: 'Advanced', type: 'Match the Following' },
-      { question: 'Match the following (River — Tributary of):
-1. Rapti
-2. Sharda
-3. Betwa
-4. Gomti', options: ['1-Ghaghara, 2-Ghaghara, 3-Yamuna, 4-Ganga', '1-Ganga, 2-Yamuna, 3-Ganga, 4-Yamuna', '1-Yamuna, 2-Ghaghara, 3-Yamuna, 4-Ganga', '1-Ghaghara, 2-Ganga, 3-Yamuna, 4-Ghaghara'], answer: 0, explanation: 'Rapti and Sharda join Ghaghara; Betwa joins Yamuna; Gomti joins Ganga.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Division — Headquarters):
-1. Devipatan
-2. Basti
-3. Chitrakoot
-4. Aligarh', options: ['1-Gonda, 2-Basti, 3-Banda, 4-Aligarh', '1-Gorakhpur, 2-Basti, 3-Chitrakoot, 4-Aligarh', '1-Gonda, 2-Basti, 3-Chitrakoot, 4-Agra', '1-Gonda, 2-Gorakhpur, 3-Banda, 4-Aligarh'], answer: 0, explanation: 'Devipatan–Gonda, Basti–Basti, Chitrakoot–Banda, Aligarh–Aligarh.', difficulty: 'Advanced', type: 'Match the Following' },
-      { question: 'Match the following (Soil/Region):
-1. Bhangar
-2. Khadar
-3. Black soil
-4. Bhabar', options: ['1-Old alluvium upland, 2-New floodplain alluvium, 3-Bundelkhand plateau, 4-Pebbly foothill belt', '1-New alluvium, 2-Old alluvium, 3-Terai, 4-Doab', '1-Old alluvium, 2-New alluvium, 3-Doab, 4-Terai', '1-Old alluvium, 2-New alluvium, 3-Bundelkhand, 4-Terai'], answer: 0, explanation: 'Bhangar is older alluvium, Khadar new alluvium, black soils in Bundelkhand, Bhabar pebbly.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Canal — River system):
-1. Upper Ganga Canal
-2. Agra Canal
-3. Sharda Sahayak
-4. Eastern Yamuna Canal', options: ['1-Ganga, 2-Yamuna, 3-Sharda, 4-Yamuna', '1-Yamuna, 2-Ganga, 3-Sharda, 4-Yamuna', '1-Ganga, 2-Yamuna, 3-Ganga, 4-Sharda', '1-Ganga, 2-Yamuna, 3-Sharda, 4-Ghaghara'], answer: 0, explanation: 'Upper Ganga and Sharda Sahayak are linked to Ganga/Sharda systems; Agra and Eastern Yamuna to Yamuna.', difficulty: 'Advanced', type: 'Match the Following' },
-      { question: 'Match the following (Waterfall — District):
-1. Lakhaniya Dari
-2. Rajdari
-3. Devdari
-4. Keetham Lake', options: ['1-Mirzapur, 2-Chandauli, 3-Chandauli, 4-Agra', '1-Mirzapur, 2-Agra, 3-Chandauli, 4-Ballia', '1-Agra, 2-Chandauli, 3-Mirzapur, 4-Agra', '1-Mirzapur, 2-Chandauli, 3-Chitrakoot, 4-Agra'], answer: 0, explanation: 'Lakhaniya Dari in Mirzapur; Rajdari/Devdari in Chandauli; Keetham Lake near Agra.', difficulty: 'Advanced', type: 'Match the Following' },
-      { question: 'Match the following (River — District/Region):
-1. Hindon
-2. Ken
-3. Rihand
-4. Rapti', options: ['1-Western UP, 2-Banda, 3-Sonbhadra, 4-Gorakhpur', '1-Eastern UP, 2-Banda, 3-Sonbhadra, 4-Gorakhpur', '1-Western UP, 2-Lakhimpur, 3-Sonbhadra, 4-Agra', '1-Western UP, 2-Banda, 3-Lucknow, 4-Gorakhpur'], answer: 0, explanation: 'Hindon in western UP, Ken in Banda, Rihand in Sonbhadra, Rapti in Gorakhpur belt.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (City — River):
-1. Prayagraj
-2. Ayodhya
-3. Mathura
-4. Varanasi', options: ['1-Ganga & Yamuna, 2-Sarayu, 3-Yamuna, 4-Ganga', '1-Gomti, 2-Ganga, 3-Yamuna, 4-Varuna', '1-Ganga & Yamuna, 2-Rapti, 3-Yamuna, 4-Ganga', '1-Ganga & Yamuna, 2-Sarayu, 3-Gomti, 4-Ganga'], answer: 0, explanation: 'Prayagraj at Sangam, Ayodhya on Sarayu, Mathura on Yamuna, Varanasi on Ganga.', difficulty: 'Moderate', type: 'Match the Following' },
-      { question: 'Match the following (Region — Physiography):
-1. Bundelkhand
-2. Vindhyan
-3. Terai
-4. Bhabar', options: ['1-Plateau, 2-Plateau hills, 3-Marshy plains, 4-Pebbly belt', '1-Coastal plain, 2-Plateau, 3-Marshy plains, 4-Pebbly belt', '1-Plateau, 2-Floodplain, 3-Marshy plains, 4-Pebbly belt', '1-Plateau, 2-Plateau hills, 3-Desert, 4-Pebbly belt'], answer: 0, explanation: 'Bundelkhand/Vindhyan are plateau regions; Terai is marshy; Bhabar is pebbly belt.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Region — District):\n1. Rohilkhand\n2. Bundelkhand\n3. Vindhyan\n4. Terai`, options: ['1-Bareilly, 2-Jhansi, 3-Sonbhadra, 4-Lakhimpur Kheri', '1-Jhansi, 2-Bareilly, 3-Sonbhadra, 4-Lakhimpur Kheri', '1-Bareilly, 2-Jhansi, 3-Mirzapur, 4-Agra', '1-Moradabad, 2-Jhansi, 3-Sonbhadra, 4-Meerut'], answer: 0, explanation: 'Rohilkhand-Bareilly, Bundelkhand-Jhansi, Vindhyan-Sonbhadra, Terai-Lakhimpur Kheri.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (River — City):\n1. Ganga\n2. Yamuna\n3. Gomti\n4. Rapti`, options: ['1-Kanpur, 2-Agra, 3-Lucknow, 4-Gorakhpur', '1-Varanasi, 2-Agra, 3-Varanasi, 4-Lucknow', '1-Kanpur, 2-Mathura, 3-Jhansi, 4-Gorakhpur', '1-Agra, 2-Kanpur, 3-Lucknow, 4-Rapti'], answer: 0, explanation: 'The correct city–river matches are Kanpur, Agra, Lucknow, and Gorakhpur.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Project — River):\n1. Rihand Dam\n2. Matatila Dam\n3. Parichha Dam\n4. Sharda Barrage`, options: ['1-Rihand, 2-Betwa, 3-Betwa, 4-Sharda', '1-Son, 2-Betwa, 3-Ken, 4-Ganga', '1-Rihand, 2-Gomti, 3-Betwa, 4-Yamuna', '1-Rihand, 2-Betwa, 3-Ghaghara, 4-Sharda'], answer: 0, explanation: 'Rihand on Rihand, Matatila/Parichha on Betwa, Sharda Barrage on Sharda.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Barrage — River):\n1. Narora\n2. Bijnor\n3. Okhla\n4. Gokul (Mathura)`, options: ['1-Ganga, 2-Ganga, 3-Yamuna, 4-Yamuna', '1-Yamuna, 2-Ganga, 3-Ganga, 4-Yamuna', '1-Ganga, 2-Yamuna, 3-Yamuna, 4-Ganga', '1-Ganga, 2-Ganga, 3-Yamuna, 4-Ganga'], answer: 0, explanation: 'Narora and Bijnor are on Ganga; Okhla and Gokul are on Yamuna.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Agro-climatic zone — Core area):\n1. Tarai & Bhabar\n2. Western Plain\n3. Bundelkhand\n4. Vindhyan`, options: ['1-Northern foothills, 2-Western UP plains, 3-Jhansi-Lalitpur, 4-Sonbhadra-Mirzapur', '1-Eastern plains, 2-Western UP plains, 3-Agra-Etawah, 4-Gorakhpur-Deoria', '1-Northern foothills, 2-Awadh, 3-Jhansi-Lalitpur, 4-Gorakhpur-Deoria', '1-Northern foothills, 2-Western UP plains, 3-Bareilly-Moradabad, 4-Sonbhadra-Mirzapur'], answer: 0, explanation: 'Tarai–Bhabar in north, Western Plain in west, Bundelkhand in south, Vindhyan in SE.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Wetland/Sanctuary — District):\n1. Suraha Tal\n2. Bakhira Tal\n3. Saman Bird Sanctuary\n4. Samaspur Bird Sanctuary`, options: ['1-Ballia, 2-Sant Kabir Nagar, 3-Mainpuri, 4-Rae Bareli', '1-Agra, 2-Sant Kabir Nagar, 3-Mainpuri, 4-Unnao', '1-Ballia, 2-Hardoi, 3-Mainpuri, 4-Rae Bareli', '1-Ballia, 2-Sant Kabir Nagar, 3-Bareilly, 4-Rae Bareli'], answer: 0, explanation: 'These wetlands/sanctuaries correspond to Ballia, Sant Kabir Nagar, Mainpuri, and Rae Bareli.', difficulty: 'Advanced', type: 'Match the Following' },
+      { question: `Match the following (River — Tributary of):\n1. Rapti\n2. Sharda\n3. Betwa\n4. Gomti`, options: ['1-Ghaghara, 2-Ghaghara, 3-Yamuna, 4-Ganga', '1-Ganga, 2-Yamuna, 3-Ganga, 4-Yamuna', '1-Yamuna, 2-Ghaghara, 3-Yamuna, 4-Ganga', '1-Ghaghara, 2-Ganga, 3-Yamuna, 4-Ghaghara'], answer: 0, explanation: 'Rapti and Sharda join Ghaghara; Betwa joins Yamuna; Gomti joins Ganga.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Division — Headquarters):\n1. Devipatan\n2. Basti\n3. Chitrakoot\n4. Aligarh`, options: ['1-Gonda, 2-Basti, 3-Banda, 4-Aligarh', '1-Gorakhpur, 2-Basti, 3-Chitrakoot, 4-Aligarh', '1-Gonda, 2-Basti, 3-Chitrakoot, 4-Agra', '1-Gonda, 2-Gorakhpur, 3-Banda, 4-Aligarh'], answer: 0, explanation: 'Devipatan–Gonda, Basti–Basti, Chitrakoot–Banda, Aligarh–Aligarh.', difficulty: 'Advanced', type: 'Match the Following' },
+      { question: `Match the following (Soil/Region):\n1. Bhangar\n2. Khadar\n3. Black soil\n4. Bhabar`, options: ['1-Old alluvium upland, 2-New floodplain alluvium, 3-Bundelkhand plateau, 4-Pebbly foothill belt', '1-New alluvium, 2-Old alluvium, 3-Terai, 4-Doab', '1-Old alluvium, 2-New alluvium, 3-Doab, 4-Terai', '1-Old alluvium, 2-New alluvium, 3-Bundelkhand, 4-Terai'], answer: 0, explanation: 'Bhangar is older alluvium, Khadar new alluvium, black soils in Bundelkhand, Bhabar pebbly.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Canal — River system):\n1. Upper Ganga Canal\n2. Agra Canal\n3. Sharda Sahayak\n4. Eastern Yamuna Canal`, options: ['1-Ganga, 2-Yamuna, 3-Sharda, 4-Yamuna', '1-Yamuna, 2-Ganga, 3-Sharda, 4-Yamuna', '1-Ganga, 2-Yamuna, 3-Ganga, 4-Sharda', '1-Ganga, 2-Yamuna, 3-Sharda, 4-Ghaghara'], answer: 0, explanation: 'Upper Ganga and Sharda Sahayak are linked to Ganga/Sharda systems; Agra and Eastern Yamuna to Yamuna.', difficulty: 'Advanced', type: 'Match the Following' },
+      { question: `Match the following (Waterfall — District):\n1. Lakhaniya Dari\n2. Rajdari\n3. Devdari\n4. Keetham Lake`, options: ['1-Mirzapur, 2-Chandauli, 3-Chandauli, 4-Agra', '1-Mirzapur, 2-Agra, 3-Chandauli, 4-Ballia', '1-Agra, 2-Chandauli, 3-Mirzapur, 4-Agra', '1-Mirzapur, 2-Chandauli, 3-Chitrakoot, 4-Agra'], answer: 0, explanation: 'Lakhaniya Dari in Mirzapur; Rajdari/Devdari in Chandauli; Keetham Lake near Agra.', difficulty: 'Advanced', type: 'Match the Following' },
+      { question: `Match the following (River — District/Region):\n1. Hindon\n2. Ken\n3. Rihand\n4. Rapti`, options: ['1-Western UP, 2-Banda, 3-Sonbhadra, 4-Gorakhpur', '1-Eastern UP, 2-Banda, 3-Sonbhadra, 4-Gorakhpur', '1-Western UP, 2-Lakhimpur, 3-Sonbhadra, 4-Agra', '1-Western UP, 2-Banda, 3-Lucknow, 4-Gorakhpur'], answer: 0, explanation: 'Hindon in western UP, Ken in Banda, Rihand in Sonbhadra, Rapti in Gorakhpur belt.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (City — River):\n1. Prayagraj\n2. Ayodhya\n3. Mathura\n4. Varanasi`, options: ['1-Ganga & Yamuna, 2-Sarayu, 3-Yamuna, 4-Ganga', '1-Gomti, 2-Ganga, 3-Yamuna, 4-Varuna', '1-Ganga & Yamuna, 2-Rapti, 3-Yamuna, 4-Ganga', '1-Ganga & Yamuna, 2-Sarayu, 3-Gomti, 4-Ganga'], answer: 0, explanation: 'Prayagraj at Sangam, Ayodhya on Sarayu, Mathura on Yamuna, Varanasi on Ganga.', difficulty: 'Moderate', type: 'Match the Following' },
+      { question: `Match the following (Region — Physiography):\n1. Bundelkhand\n2. Vindhyan\n3. Terai\n4. Bhabar`, options: ['1-Plateau, 2-Plateau hills, 3-Marshy plains, 4-Pebbly belt', '1-Coastal plain, 2-Plateau, 3-Marshy plains, 4-Pebbly belt', '1-Plateau, 2-Floodplain, 3-Marshy plains, 4-Pebbly belt', '1-Plateau, 2-Plateau hills, 3-Desert, 4-Pebbly belt'], answer: 0, explanation: 'Bundelkhand/Vindhyan are plateau regions; Terai is marshy; Bhabar is pebbly belt.', difficulty: 'Moderate', type: 'Match the Following' },
       { question: 'Which of the following pairs is correctly matched?', options: ['Nawabganj Bird Sanctuary — Unnao', 'Saman Bird Sanctuary — Bahraich', 'Samaspur Bird Sanctuary — Mirzapur', 'Katarniaghat Sanctuary — Hardoi'], answer: 0, explanation: 'Nawabganj (Shaheed C.S. Azad) Bird Sanctuary is in Unnao.', difficulty: 'Moderate', type: 'Match' },
       { question: 'Which of the following pairs is correctly matched?', options: ['Gautam Buddh Nagar — NCR district', 'Jhansi — Terai belt', 'Sonbhadra — Western plain', 'Bijnor — Bundelkhand'], answer: 0, explanation: 'Gautam Buddh Nagar is part of NCR.', difficulty: 'Easy', type: 'Match' },
       { question: 'Which of the following pairs is correctly matched?', options: ['Mirzapur — Vindhyan region', 'Gorakhpur — Bundelkhand region', 'Saharanpur — Vindhyan region', 'Lalitpur — Terai belt'], answer: 0, explanation: 'Mirzapur lies in the Vindhyan region.', difficulty: 'Moderate', type: 'Match' },

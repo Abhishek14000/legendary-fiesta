@@ -116,6 +116,7 @@
     .question-text {
       font-size: 15px;
       line-height: 1.5;
+      white-space: pre-line;
       margin-bottom: 10px;
     }
 
@@ -392,6 +393,22 @@
     const EXPECTED_OPTION_COUNT = 4;
     const QUESTION_VISIBILITY_THRESHOLD = 0.35; // Mark visited when ~35% of a card is visible.
 
+    const shuffleOptions = (options, answer) => {
+      if (!Array.isArray(options)) {
+        return { options, answer };
+      }
+      const indexed = options.map((option, index) => ({ option, index }));
+      for (let i = indexed.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+      }
+      const shuffledOptions = indexed.map((entry) => entry.option);
+      const shuffledAnswer = typeof answer === 'number'
+        ? indexed.findIndex((entry) => entry.index === answer)
+        : answer;
+      return { options: shuffledOptions, answer: shuffledAnswer };
+    };
+
     const add = (question, options, answer, explanation, difficulty, type) => {
       const index = questions.length + 1;
       if (!Array.isArray(options) || options.length !== EXPECTED_OPTION_COUNT) {
@@ -400,7 +417,8 @@
       if (Array.isArray(options) && (typeof answer !== 'number' || answer < 0 || answer >= options.length)) {
         console.warn(`Q${index}: Answer index is out of range.`, question);
       }
-      questions.push({ question, options, answer, explanation, difficulty, type });
+      const shuffled = shuffleOptions(options, answer);
+      questions.push({ question, options: shuffled.options, answer: shuffled.answer, explanation, difficulty, type });
     };
 
     // UPSC-style question bank
@@ -492,12 +510,12 @@ How many pairs given above are correctly matched?`;
       { prompt: 'Consider the following statements about northern UP:', statements: ['The Terai belt supports dense forests and wildlife.', 'Dudhwa National Park lies in the Terai belt.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about mineral resources in UP:', statements: ['The Vindhyan region is associated with mineral deposits.', 'Bundelkhand plateau has rocky outcrops and quarries.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about the Chambal ravines and south-western Uttar Pradesh:', statements: ['The ravines are associated with the Chambal river system along the UP–MP–Rajasthan border.', 'The ravine topography is most extensive in the Etawah–Jalaun–Agra belt.', 'The ravines are primarily formed by aeolian deposition of sand dunes.'], correct: 0, explanation: 'Statements 1 and 2 are correct; the ravines are fluvial erosion features, not aeolian dunes.', difficulty: 'Advanced', type: 'Statement' },
-      { prompt: 'Consider the following statements about the Ganga–Yamuna confluence:', statements: ['It is called Triveni Sangam.', 'It is located at Prayagraj.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
+      { prompt: 'Consider the following statements about the Ganga–Yamuna confluence:', statements: ['It is located at Varanasi.', 'It is called Triveni Sangam.'], correct: 1, explanation: 'Only statement 2 is correct; the confluence is at Prayagraj.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about agricultural seasons:', statements: ['Rabi sowing follows the retreat of monsoon.', 'Kharif crops mature during the monsoon months.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about UP’s agro-climatic zones:', statements: ['Western Plain zone covers western UP plains.', 'Central Plain zone largely corresponds to the Awadh region.', 'Vindhyan zone lies in south-eastern UP.'], correct: 3, explanation: 'All three statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about the North Eastern Plain zone:', statements: ['It is centered around Gorakhpur–Deoria belt.', 'It is among the flood-prone parts of the state.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about rainfall in UP:', statements: ['Eastern UP generally receives higher rainfall than western UP.', 'Bundelkhand has lower and more variable rainfall.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
-      { prompt: 'Consider the following statements about the Loo winds:', statements: ['They are hot, dry winds in May–June.', 'They are most common in the northern plains.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
+      { prompt: 'Consider the following statements about the Loo winds:', statements: ['They are cold, moist winds in December–January.', 'They are confined only to the Terai belt.'], correct: 3, explanation: 'Both statements are incorrect; Loo are hot, dry summer winds across the plains.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about major barrages:', statements: ['Narora Barrage is associated with the Lower Ganga Canal.', 'Bijnor Barrage is on the Ganga.', 'Okhla Barrage is on the Yamuna.'], correct: 3, explanation: 'All three statements are correct.', difficulty: 'Advanced', type: 'Statement' },
       { prompt: 'Consider the following statements about the Upper Ganga Canal:', statements: ['It originates at Haridwar (Bhimgoda Barrage).', 'It primarily irrigates the Ganga–Yamuna Doab.'], correct: 2, explanation: 'Both statements are correct.', difficulty: 'Moderate', type: 'Statement' },
       { prompt: 'Consider the following statements about the Sharda Canal system:', statements: ['It originates from the Sharda Barrage.', 'It supports irrigation in Terai and eastern UP.', 'It is linked to the Yamuna basin.'], correct: 0, explanation: 'Statements 1 and 2 are correct.', difficulty: 'Advanced', type: 'Statement' },
@@ -528,7 +546,7 @@ How many pairs given above are correctly matched?`;
       { prompt: 'Consider the following pairs (City — River):', pairs: [['Lucknow', 'Gomti'], ['Varanasi', 'Ganga'], ['Agra', 'Yamuna'], ['Gorakhpur', 'Ganga']], correct: 2, explanation: 'Three are correct; Gorakhpur is on the Rapti.', difficulty: 'Moderate', type: 'Pairs' },
       { prompt: 'Consider the following pairs (Agro-climatic zone — Core area):', pairs: [['Bundelkhand', 'Jhansi–Lalitpur'], ['Eastern Plain', 'Varanasi–Azamgarh'], ['Tarai & Bhabar', 'Lakhimpur–Bahraich'], ['South Western Semi-Arid', 'Gorakhpur–Deoria']], correct: 2, explanation: 'Three pairs are correct; Gorakhpur–Deoria is NE Plain.', difficulty: 'Advanced', type: 'Pairs' },
       { prompt: 'Consider the following pairs (Wildlife/Wetland — District):', pairs: [['Dudhwa National Park', 'Lakhimpur Kheri'], ['Katarniaghat Sanctuary', 'Bahraich'], ['Suraha Tal', 'Ballia'], ['Keetham Lake', 'Hardoi']], correct: 2, explanation: 'Three are correct; Keetham Lake is near Agra.', difficulty: 'Moderate', type: 'Pairs' },
-      { prompt: 'Consider the following pairs (River — Entry point into UP):', pairs: [['Ganga', 'Bijnor'], ['Yamuna', 'Saharanpur'], ['Ghaghara', 'Bijnor'], ['Rapti', 'Nepal border']], correct: 2, explanation: 'Two pairs are correct; Ghaghara does not enter at Bijnor.', difficulty: 'Advanced', type: 'Pairs' },
+      { prompt: 'Consider the following pairs (River — Entry point into UP):', pairs: [['Ganga', 'Bijnor'], ['Yamuna', 'Saharanpur'], ['Ghaghara', 'Bijnor'], ['Rapti', 'Bijnor']], correct: 1, explanation: 'Only two pairs are correct; Ghaghara and Rapti do not enter at Bijnor.', difficulty: 'Advanced', type: 'Pairs' },
       { prompt: 'Consider the following pairs (District — Region):', pairs: [['Mahoba', 'Bundelkhand'], ['Ballia', 'Purvanchal'], ['Bijnor', 'Terai'], ['Mirzapur', 'Vindhyan']], correct: 2, explanation: 'Three pairs are correct; Bijnor is not Terai.', difficulty: 'Moderate', type: 'Pairs' },
       { prompt: 'Consider the following pairs (Soil type — Region):', pairs: [['Khadar', 'Floodplains'], ['Bhangar', 'Upland alluvium'], ['Black soil', 'Bundelkhand'], ['Laterite', 'Terai']], correct: 2, explanation: 'Three pairs are correct; laterite is not typical of Terai.', difficulty: 'Moderate', type: 'Pairs' },
       { prompt: 'Consider the following pairs (River — Notable association):', pairs: [['Ghaghara', 'Sarayu name in UP'], ['Sharda', 'Mahakali name in Nepal'], ['Betwa', 'Chambal ravines'], ['Rihand', 'Govind Ballabh Pant Sagar']], correct: 2, explanation: 'Three pairs are correct; Betwa is not associated with Chambal ravines.', difficulty: 'Advanced', type: 'Pairs' },
@@ -542,7 +560,7 @@ How many pairs given above are correctly matched?`;
       { prompt: 'Consider the following pairs (Wetland — District):', pairs: [['Bakhira Tal', 'Sant Kabir Nagar'], ['Suraha Tal', 'Ballia'], ['Keetham Lake', 'Agra'], ['Samaspur Tal', 'Jhansi']], correct: 2, explanation: 'Three pairs are correct; Samaspur is in Rae Bareli.', difficulty: 'Advanced', type: 'Pairs' },
       { prompt: 'Consider the following pairs (River — City on its bank):', pairs: [['Ganga', 'Kanpur'], ['Yamuna', 'Agra'], ['Rapti', 'Gorakhpur'], ['Gomti', 'Varanasi']], correct: 2, explanation: 'Three pairs are correct; Gomti is not associated with Varanasi.', difficulty: 'Moderate', type: 'Pairs' },
       { prompt: 'Consider the following pairs (District — Wildlife site):', pairs: [['Bahraich', 'Katarniaghat'], ['Chandauli', 'Chandraprabha'], ['Mirzapur', 'Lakhaniya Dari'], ['Etawah', 'Dudhwa']], correct: 2, explanation: 'Three pairs are correct; Dudhwa is in Lakhimpur Kheri.', difficulty: 'Advanced', type: 'Pairs' },
-      { prompt: 'Consider the following pairs (River — Special name):', pairs: [['Ghaghara', 'Sarayu'], ['Sharda', 'Mahakali'], ['Ganga', 'Saryu'], ['Gomti', 'Saraswati']], correct: 1, explanation: 'Only two pairs are correct: Ghaghara–Sarayu and Sharda–Mahakali.', difficulty: 'Advanced', type: 'Pairs' },
+      { prompt: 'Consider the following pairs (River — Special name):', pairs: [['Ghaghara', 'Sarayu'], ['Sharda', 'Ganga'], ['Ganga', 'Saryu'], ['Gomti', 'Saraswati']], correct: 0, explanation: 'Only one pair is correct: Ghaghara is known as Sarayu in UP.', difficulty: 'Advanced', type: 'Pairs' },
       { prompt: 'Consider the following pairs (District — Region):', pairs: [['Saharanpur', 'Western plain'], ['Sonbhadra', 'Vindhyan'], ['Lakhimpur Kheri', 'Terai'], ['Etawah', 'Bundelkhand']], correct: 2, explanation: 'Three are correct; Etawah is in the south-western plain, not Bundelkhand.', difficulty: 'Moderate', type: 'Pairs' },
       { prompt: 'Consider the following pairs (Dam/Barrage — Location):', pairs: [['Rihand Dam', 'Sonbhadra'], ['Matatila Dam', 'Lalitpur'], ['Narora Barrage', 'Bulandshahr'], ['Agra Barrage', 'Mathura']], correct: 2, explanation: 'Three are correct; Agra Barrage is at Agra, not Mathura.', difficulty: 'Advanced', type: 'Pairs' },
       { prompt: 'Consider the following pairs (District — NCR):', pairs: [['Ghaziabad', 'NCR'], ['Gautam Buddh Nagar', 'NCR'], ['Meerut', 'NCR'], ['Gorakhpur', 'NCR']], correct: 2, explanation: 'Three are correct; Gorakhpur is not NCR.', difficulty: 'Moderate', type: 'Pairs' },
@@ -557,7 +575,7 @@ How many pairs given above are correctly matched?`;
       { assertion: 'The Terai belt supports dense forests and wildlife.', reason: 'It has a high groundwater table and marshy conditions.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'Bundelkhand experiences frequent drought conditions.', reason: 'It receives lower and more variable rainfall than eastern UP.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'Western UP has higher irrigation intensity than Bundelkhand.', reason: 'Western UP has dense canal and tube-well networks.', correct: 0, explanation: 'Both are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
-      { assertion: 'The Ganga–Yamuna Doab is among the most fertile regions of UP.', reason: 'It receives regular alluvial deposits from two major river systems.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
+      { assertion: 'The Ganga–Yamuna Doab is among the most fertile regions of UP.', reason: 'It is also one of the most densely populated belts in the state.', correct: 1, explanation: 'Both statements are true, but population density does not explain fertility.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'The Bhabar belt has low surface flow of streams.', reason: 'Its deposits are coarse and highly porous.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'The Terai belt is more suitable for rice cultivation than Bundelkhand.', reason: 'The Terai has high groundwater and wet conditions.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'Ghaghara–Rapti system contributes significantly to flooding in eastern UP.', reason: 'These rivers carry heavy monsoon discharge from the Himalayas.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
@@ -566,10 +584,10 @@ How many pairs given above are correctly matched?`;
       { assertion: 'Sugarcane is concentrated in western UP.', reason: 'The region has better irrigation and access to sugar mills.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'The Vindhyan region is relatively richer in mineral resources than the central plains.', reason: 'It consists of older plateau rocks with mineral deposits.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'Dudhwa National Park lies in the Terai belt.', reason: 'The Terai belt is characterized by marshes and high groundwater supporting wildlife.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
-      { assertion: 'Eastern UP is better suited for rice cultivation than western UP.', reason: 'It receives higher monsoon rainfall and has extensive floodplains.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
+      { assertion: 'Bundelkhand is better suited for rice cultivation than eastern UP.', reason: 'Eastern UP receives higher monsoon rainfall and has extensive floodplains.', correct: 3, explanation: 'The assertion is false, but the reason is true.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'The Chambal ravines are associated with soil erosion in south-west UP.', reason: 'The Chambal river cuts into the soft alluvium and badland topography develops.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'The Sharda Sahayak canal system is vital for irrigation in eastern UP.', reason: 'It originates from the Sharda Barrage located in the Terai belt.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
-      { assertion: 'The Yamuna forms a natural boundary along western UP.', reason: 'It separates parts of UP from Haryana and Delhi.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
+      { assertion: 'The Yamuna forms a natural boundary along western UP.', reason: 'It meets the Ganga at Varanasi.', correct: 2, explanation: 'The assertion is true, but the reason is false.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'Bundelkhand has lower cropping intensity than the Ganga–Yamuna plains.', reason: 'The plateau has poorer soils and limited irrigation infrastructure.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Advanced', type: 'Assertion-Reason' },
       { assertion: 'The Mid Western Plain zone is agriculturally productive.', reason: 'It lies in the irrigated Ganga–Yamuna interfluve.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
       { assertion: 'The Ganga basin dominates drainage in Uttar Pradesh.', reason: 'Most major rivers and tributaries of UP ultimately join the Ganga.', correct: 0, explanation: 'Both statements are true and the reason explains the assertion.', difficulty: 'Moderate', type: 'Assertion-Reason' },
@@ -617,7 +635,7 @@ How many pairs given above are correctly matched?`;
       { question: 'Arrange the following in chronological order: (a) 1902 renaming to United Provinces of Agra and Oudh (b) 1950 renaming to Uttar Pradesh (c) 2000 creation of Uttarakhand (d) 1935 adoption of United Provinces.', options: ['a-d-b-c', 'a-b-d-c', 'd-a-b-c', 'a-d-c-b'], answer: 0, explanation: 'Correct order is a-d-b-c.', difficulty: 'Moderate', type: 'Chronology' },
       { question: 'Arrange the following in chronological order: (a) Establishment of Upper Ganga Canal (b) Establishment of Lower Ganga Canal (c) Sharda Canal system (d) Sharda Sahayak expansion.', options: ['a-b-c-d', 'b-a-c-d', 'a-c-b-d', 'a-b-d-c'], answer: 0, explanation: 'Upper Ganga Canal predates Lower Ganga, followed by Sharda and Sharda Sahayak.', difficulty: 'Moderate', type: 'Chronology' },
       { question: 'Arrange the following in chronological order of naming/formation: (a) North-Western Provinces (b) United Provinces of Agra and Oudh (c) United Provinces (d) Uttar Pradesh (e) Uttarakhand.', options: ['a-b-c-d-e', 'b-a-c-d-e', 'a-c-b-d-e', 'a-b-d-c-e'], answer: 0, explanation: 'Correct order is a-b-c-d-e.', difficulty: 'Advanced', type: 'Chronology' },
-      { question: 'Arrange the following river-related administrative/engineering milestones in chronological order: (a) Upper Ganga Canal (b) Okhla Barrage/Agra Canal (c) Narora Barrage/Lower Ganga Canal (d) Sharda Barrage system.', options: ['a-c-b-d', 'a-b-c-d', 'b-a-c-d', 'a-c-d-b'], answer: 1, explanation: 'Upper Ganga Canal preceded Okhla, Narora, and then Sharda system.', difficulty: 'Moderate', type: 'Chronology' }
+      { question: 'Arrange the following river-related administrative/engineering milestones in chronological order: (a) Okhla Barrage/Agra Canal (b) Upper Ganga Canal (c) Sharda Barrage system (d) Narora Barrage/Lower Ganga Canal.', options: ['b-a-c-d', 'a-b-c-d', 'b-c-a-d', 'a-b-d-c'], answer: 0, explanation: 'Upper Ganga Canal predates Okhla/Agra, followed by Sharda Barrage and later Narora.', difficulty: 'Moderate', type: 'Chronology' }
     ];
 
     const mapQuestions = [
